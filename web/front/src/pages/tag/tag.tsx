@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'umi';
 import request from '@/utils/request';
-import Pagination from '@/layouts/components/pagination'
+import Pagination from '@/layouts/components/pagination';
+declare var title :string
 
 class Archive extends React.Component<any> {
   constructor(props: any) {
@@ -45,6 +46,10 @@ class Archive extends React.Component<any> {
     })
   }
 
+  componentDidUpdate(){
+    document.title = this.state.tag+ ' · '+ title
+  }
+
   componentDidMount() {
     this.getdata()
   }
@@ -69,6 +74,7 @@ class Archive extends React.Component<any> {
     return (
       <><section className="container">
         <div className="archive">
+        <h2 className="archive-year">{this.state.tag}</h2>
           {elements}
         </div>
       </section>

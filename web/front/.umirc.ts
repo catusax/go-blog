@@ -1,5 +1,5 @@
 import { defineConfig } from 'umi';
-
+const title = 'Just4fun'
 export default defineConfig({
   styles:[
     'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.1/build/styles/default.min.css'
@@ -10,6 +10,9 @@ export default defineConfig({
   nodeModulesTransform: {
     type: 'none',
   },
+  define:{
+    title: title,
+  },
   routes: [
     {
       path: '/',
@@ -18,18 +21,22 @@ export default defineConfig({
         {
           path: '/',
           component: '@/pages/index', 
+          title: title
         },
         {
           path: '/page/:page',
           component: '@/pages/index', 
+          title: title
         },
         {
           path: '/archives',
-          component: '@/pages/archive/archive'
+          component: '@/pages/archive/archive',
+          title: 'Archives · '+ title
         },
         {
           path: '/archives/page/:page',
-          component: '@/pages/archive/archive'
+          component: '@/pages/archive/archive',
+          title: 'Archives · '+ title
         },
         {
           path: '/post/:id',
