@@ -28,7 +28,8 @@ class EditModal extends React.Component<any> {
             method: 'POST',
             data: {
                 "Content": this.state.contentmd,
-                "ID": this.props.record.ID
+                "ID": this.props.record.ID,
+                "Publish": this.props.record.Publish
             },
         });
     }

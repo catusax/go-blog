@@ -49,14 +49,8 @@ const errorHandler = (error: { response: Response }): Response => {
  * 配置request请求时的默认参数
  */
 
-const { REACT_APP_ENV } = process.env;
-
-let devserver = ""
-
-if (REACT_APP_ENV === 'dev') devserver = "http://localhost" 
-
 const request = extend({
-  prefix: devserver,
+  prefix: process.env.url,
   errorHandler, // 默认错误处理
   credentials: 'include', // 默认请求是否带上cookie
 });
