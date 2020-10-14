@@ -1,0 +1,13 @@
+# 重命名为config.yaml后可被载入
+port: 80
+
+db:
+    host: 1.1.1.1
+    port: 5432
+    user: root
+    password: password
+    name: blog
+
+user:
+    username: root
+    password: password
