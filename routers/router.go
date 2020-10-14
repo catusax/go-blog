@@ -20,7 +20,7 @@ func loadRouters(router *gin.Engine) {
 		})
 	})
 
-	// 设置静态文件夹
+	// 设置静态文件夹,仅用于测试，部署时请使用nginx or caddy
 	router.Static("/font", "./static/font")
 	router.StaticFile("/favicon.png", "./static/favicon.png")
 	router.StaticFile("/", "./web/front/dist/index.html")

@@ -39,6 +39,7 @@ func Login(c *gin.Context) {
 			HttpOnly: true,
 			MaxAge:   2629743,
 			Secure:   true,
+			Path:     "/",
 		}
 		http.SetCookie(c.Writer, cookie)
 		c.JSON(http.StatusOK, gin.H{

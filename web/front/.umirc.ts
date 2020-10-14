@@ -1,6 +1,12 @@
 import { defineConfig } from 'umi';
 
 export default defineConfig({
+  styles:[
+    'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.1/build/styles/default.min.css'
+  ],
+  scripts:[
+    'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.1/build/highlight.min.js'
+  ],
   nodeModulesTransform: {
     type: 'none',
   },
