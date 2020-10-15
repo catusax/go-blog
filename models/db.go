@@ -23,16 +23,3 @@ func init() {
 		log.Fatal(err)
 	}
 }
-
-//TODO 简介字段
-func creat(title string, content string) error {
-	result := db.Create(map[string]interface{}{
-		"Title": title, "Content": content,
-	})
-	return result.Error
-}
-
-//读取整页十个 读取文章内容
-func read() {
-
-}
