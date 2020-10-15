@@ -1,28 +1,18 @@
 package models
 
 import (
-	"blog/utils"
 	"bytes"
 	"log"
 	"time"
 
-	"github.com/russross/blackfriday/v2"
 	"github.com/spf13/viper"
-	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
-// Post 存储文章
+// Post 包含了Tag
 type Post struct {
-	gorm.Model
-	Title       string `gorm:"type:varchar(100);not null"`
-	Content     string `gorm:"type:text"`
-	HTML        string `gorm:"type:text"`
-	Update      string `gorm:"type:varchar(12);default:2020-09-28"`
-	Description string `gorm:"type:varchar(400)"`
-	Publish     bool   `gorm:"default:false"`
-	Yaml        string `gorm:"type:text"`
-	Tags        []*Tag `gorm:"many2many:post_tags;"`
+	Article
+	Tags []*Tag `gorm:"many2many:post_tags;"`
 	//Tags    []Tag  `gorm:"many2many:post_tags;"`
 }
 
@@ -122,22 +112,9 @@ func (post *Post) MDParse(md []byte, yaml []byte) {
 	post.Yaml = string(yaml)
 }
 
-//SetDescription 根据文章Content生成Description
-func (post *Post) setDescription() {
-	descMD := utils.GetDescription([]byte(post.Content))
-	if len(descMD) >= 5 {
-		post.Description = string(blackfriday.Run(descMD))
-	}
-}
-
-//将MD转换为HTML
-func (post *Post) setHTML() {
-	post.HTML = string(blackfriday.Run([]byte(post.Content)))
-}
-
-func (post *Post) setDate() {
-	post.UpdatedAt = time.Now()
-	post.Update = time.Now().Format("Jan 02,2006")
+//DeletePost 根据id删除一个post
+func DeletePost(id int) error {
+	return db.Delete(&Post{}, id).Error
 }
 
 //Save 保存或更新一个文章到数据库
@@ -147,16 +124,11 @@ func (post *Post) Save() error {
 	post.setDate()
 	var post2 Post
 	err := db.First(&post2, post.ID).Error
-	//err := db.Where("title = ?", post.Title).First(&existpost)
+	//err := db.Where("title = ?", article.Title).First(&existarticle)
 	//插入或更新
-	if err != nil { //不存在post，直接新建
+	if err != nil { //不存在article，直接新建
 		return db.Create(&post).Error
 	}
 	post.CreatedAt = post2.CreatedAt //防止更新后时间错乱
 	return db.Save(&post).Error
-}
-
-//DeletePost 根据id删除一个post
-func DeletePost(id int) error {
-	return db.Delete(&Post{}, id).Error
 }

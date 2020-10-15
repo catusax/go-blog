@@ -18,7 +18,7 @@ func init() {
 	if err != nil {
 		log.Fatal("failed to connect database: ", err)
 	}
-	err = db.AutoMigrate(&Post{})
+	err = db.AutoMigrate(&Post{}, &Page{})
 	if err != nil {
 		log.Fatal(err)
 	}
