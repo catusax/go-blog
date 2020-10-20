@@ -23,7 +23,7 @@ class Archive extends React.Component<any> {
 
 
   get = (page?:number) => {
-    return request("/index", {
+    return request("/api/public/index", {
       method: "get",
       params: {
         page: page || this.props.match.params.page,

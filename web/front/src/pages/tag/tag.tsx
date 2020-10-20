@@ -24,7 +24,7 @@ class Archive extends React.Component<any> {
 
   
   get = (page?:number) => {
-    return request("/tag", {
+    return request("/api/public/tag", {
       method: "get",
       params: {
         page: page || this.props.match.params.page,

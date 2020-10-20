@@ -2,7 +2,7 @@ import {defineConfig} from 'umi';
 export default defineConfig( {
     define: {
       "process.env": {
-        url: "http://localhost/api/public"
+        url: "http://localhost"
       }, 
     },
   });

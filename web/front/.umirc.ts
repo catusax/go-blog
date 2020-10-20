@@ -49,6 +49,10 @@ export default defineConfig({
         {
           path: '/tag/:name/page/:page',
           component: '@/pages/tag/tag'
+        },
+        {
+          path: '/pages/:pageid',
+          component:'@/pages/pages/pages'
         }
       ],
     },

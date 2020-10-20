@@ -1,5 +1,4 @@
 import React from 'react';
-import './post.less'
 import request from '@/utils/request';
 import { Link } from 'umi';
 declare var hljs: { highlightBlock: (arg0: Element) => void; }
@@ -15,17 +14,14 @@ class Archive extends React.Component<any> {
       Title: "",
       Update: "",
       HTML: "",
-      Tags: [{
-        Name: "",
-      }]
     }
   }
 
   get = () => {
-    return request("/api/public/post", {
+    return request("/api/pages/page", {
       method: "get",
       params: {
-        page: this.props.match.params.id,
+        page: this.props.match.params.pageid,
       },
     })
   }
@@ -33,13 +29,15 @@ class Archive extends React.Component<any> {
   getdata = async () => {
     let data = await this.get()
     this.setState({
-      post: data.post
+      post: data.page
     })
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps: any) {
+    if (this.props.match.params.pageid !== prevProps.match.params.pageid){
+    this.getdata()
     this.highlightCallBack();
-    document.title = this.state.post.Title+ ' · '+ title
+    document.title = this.state.post.Title+ ' · '+ title}
   }
 
   highlightCallBack = () => {
@@ -51,31 +49,20 @@ class Archive extends React.Component<any> {
 
   componentDidMount() {
     this.getdata()
+    this.highlightCallBack();
   }
 
-  render() {
-    let elements: any = []
-    this.state.post.Tags.forEach((tag) => {
-      let link = "/tag/" + tag.Name
-      elements.push(
-        <Link to={link}>{tag.Name}</Link>
-      )
-    }
 
-    )
+  render() {
     return (
       <section className="container">
         <div className="post">
           <article className="post-block">
             <h1 className="post-title">{this.state.post.Title}</h1>
-            <div className="post-tag">
-              {elements}
-            </div>
             <div className="post-info">{this.state.post.Update}</div>
             <div dangerouslySetInnerHTML={{ __html: this.state.post.HTML }} className="post-content">
             </div>
-            <div className="post-info">last updated: {this.state.post.Update}</div>
-            <a className="post-info" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">许可协议: "署名-非商用-相同方式共享 4.0" 转载请保留原文链接及作者。</a></article>
+            <div className="post-info">last updated: {this.state.post.Update}</div></article>
         </div>
       </section>
     );

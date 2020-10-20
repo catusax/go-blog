@@ -1,8 +1,8 @@
 // https://umijs.org/config/
 import { defineConfig } from 'umi';
-import defaultSettings from './defaultSettings';
-//import proxy from './proxy';
-const baseurl = "/admin/"
+import defaultSettings from './defaultSettings'; //import proxy from './proxy';
+
+const baseurl = '/admin/';
 export default defineConfig({
   hash: true,
   antd: {},
@@ -66,12 +66,18 @@ export default defineConfig({
               path: '/editor',
               component: './Editor',
             },
-            // {
-            //   name: '空白页面',
-            //   icon: 'smile',
-            //   path: '/tags',
-            //   component: './Tags',
-            // },
+            {
+              name: '友链',
+              icon: 'smile',
+              path: '/links',
+              component: './Links',
+            },
+            {
+              name: '关于',
+              icon: 'smile',
+              path: '/about',
+              component: '@/pages/About',
+            },
             {
               component: './404',
             },

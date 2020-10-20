@@ -41,6 +41,13 @@ func loadRouters(router *gin.Engine) {
 			posts.PUT("/changestatus", ctrs.ChangeStatus)
 		}
 
+		pages := api.Group("/pages")
+		{
+			pages.GET("/getlist", ctrs.PagesList)
+			pages.GET("/page", ctrs.Page)
+			pages.POST("/new", ctrs.NewPage)
+		}
+
 		api.GET("/currentUser", ctrs.AuthMiddleWare(), ctrs.CurrentUser)
 
 		public := api.Group("/public")

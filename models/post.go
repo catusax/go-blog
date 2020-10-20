@@ -1,10 +1,12 @@
 package models
 
 import (
+	"blog/utils"
 	"bytes"
 	"log"
 	"time"
 
+	"github.com/russross/blackfriday/v2"
 	"github.com/spf13/viper"
 	"gorm.io/gorm/clause"
 )
@@ -12,7 +14,9 @@ import (
 // Post 包含了Tag
 type Post struct {
 	Article
-	Tags []*Tag `gorm:"many2many:post_tags;"`
+	Description string `gorm:"type:varchar(400)"`
+	Publish     bool   `gorm:"default:false"`
+	Tags        []*Tag `gorm:"many2many:post_tags;"`
 	//Tags    []Tag  `gorm:"many2many:post_tags;"`
 }
 
@@ -79,6 +83,14 @@ func GetPostByYear(page int, pagesize int) ([]Archive, int64, error) {
 		}
 	}
 	return archive, total, err
+}
+
+//SetDescription 根据文章Content生成Description
+func (post *Post) setDescription() {
+	descMD := utils.GetDescription([]byte(post.Content))
+	if len(descMD) >= 5 {
+		post.Description = string(blackfriday.Run(descMD))
+	}
 }
 
 //MDParse 用于把hexo post解析成一个Post结构体
