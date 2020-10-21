@@ -1,6 +1,5 @@
 import React from 'react';
 import request from '@/utils/request';
-import { Link } from 'umi';
 declare var hljs: { highlightBlock: (arg0: Element) => void; }
 declare var title:string
 
@@ -34,10 +33,9 @@ class Archive extends React.Component<any> {
   }
 
   componentDidUpdate(prevProps: any) {
-    if (this.props.match.params.pageid !== prevProps.match.params.pageid){
-    this.getdata()
+    if (this.props.match.params.pageid !== prevProps.match.params.pageid)  this.getdata()
     this.highlightCallBack();
-    document.title = this.state.post.Title+ ' · '+ title}
+    document.title = this.state.post.Title+ ' · '+ title
   }
 
   highlightCallBack = () => {

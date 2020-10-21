@@ -2,6 +2,7 @@ import React from 'react';
 import './post.less'
 import request from '@/utils/request';
 import { Link } from 'umi';
+import Comment from '../components/comment'
 declare var hljs: { highlightBlock: (arg0: Element) => void; }
 declare var title:string
 
@@ -58,12 +59,13 @@ class Archive extends React.Component<any> {
     this.state.post.Tags.forEach((tag) => {
       let link = "/tag/" + tag.Name
       elements.push(
-        <Link to={link}>{tag.Name}</Link>
+        <Link key={tag.Name} to={link}>{tag.Name}</Link>
       )
     }
 
     )
     return (
+      <>
       <section className="container">
         <div className="post">
           <article className="post-block">
@@ -78,6 +80,8 @@ class Archive extends React.Component<any> {
             <a className="post-info" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">许可协议: "署名-非商用-相同方式共享 4.0" 转载请保留原文链接及作者。</a></article>
         </div>
       </section>
+      <Comment title={this.state.post.Title}/>
+      </>
     );
   }
 }

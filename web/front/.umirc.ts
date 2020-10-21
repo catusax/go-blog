@@ -5,13 +5,19 @@ export default defineConfig({
     'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.1/build/styles/default.min.css'
   ],
   scripts:[
-    'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.1/build/highlight.min.js'
+    'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.1/build/highlight.min.js',
   ],
   nodeModulesTransform: {
     type: 'none',
   },
   define:{
     title: title,
+    gitalkconf:{
+      owner: 'qwe',
+      repo: 'qwe',
+      clientID: 'qqwweerr',
+      clientSecret: 'qwerqwerqwerqwer',
+    }
   },
   routes: [
     {
