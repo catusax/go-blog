@@ -369,9 +369,6 @@ header .nav-list-item a {
 	max-width:100%;
 	margin:1em auto
 }
-.post-content>table,.post-content>figure.highlight {
-	box-shadow:0 1px 2px rgba(0,0,0,0.125)
-}
 .post-content .tip {
 	position:relative;
 	margin:2em 0;
@@ -414,36 +411,10 @@ header .nav-list-item a {
 }
 code,pre {
 	font-size:0.8em;
-	background-color:#f8f8f8;
 	font-family:"Roboto Mono",Monaco,courier,monospace
 }
-.highlight {
-	position:relative;
-	margin:1em 0;
-	border-radius:2px;
-	line-height:1.1em;
-	background-color:#f8f8f8;
-	overflow-x:auto
-}
-.highlight table,.highlight tr,.highlight td {
-	width:100%;
-	border-collapse:collapse;
-	padding:0;
-	margin:0
-}
-.highlight .gutter {
-	display:none
-}
-.highlight .code pre {
-	padding:1.2em 1.4em;
-	line-height:1.5em;
-	margin:0
-}
-.highlight .code pre .line {
-	width:auto;
-	height:18px
-}
-.highlight.html .code:after,.highlight.js .code:after,.highlight.bash .code:after,.highlight.css .code:after,.highlight.scss .code:after,.highlight.diff .code:after,.highlight.java .code:after,.highlight.xml .code:after,.highlight.python .code:after,.highlight.json .code:after,.highlight.swift .code:after,.highlight.ruby .code:after,.highlight.perl .code:after,.highlight.php .code:after,.highlight.c .code:after,.highlight.cpp .code:after,.highlight.ts .code:after {
+
+code:after {
 	position:absolute;
 	top:0;
 	right:0;
@@ -453,98 +424,127 @@ code,pre {
 	padding:5px 10px 0;
 	line-height:15px;
 	height:15px;
-	font-weight:600
+	font-weight:600;
 }
-.highlight.html .code:after {
+
+
+.language-html:after {
 	content:"HTML"
 }
-.highlight.js .code:after {
+.language-js:after {
 	content:"JS"
 }
-.highlight.bash .code:after {
+.language-bash:after {
 	content:"BASH"
 }
-.highlight.css .code:after {
+.language-css:after {
 	content:"CSS"
 }
-.highlight.scss .code:after {
+.language-scss:after {
 	content:"SCSS"
 }
-.highlight.diff .code:after {
+.language-diff:after {
 	content:"DIFF"
 }
-.highlight.java .code:after {
+.language-java:after {
 	content:"JAVA"
 }
-.highlight.xml .code:after {
+.language-xml:after {
 	content:"XML"
 }
-.highlight.python .code:after {
+.language-python:after {
 	content:"PYTHON"
 }
-.highlight.json .code:after {
+.language-json:after {
 	content:"JSON"
 }
-.highlight.swift .code:after {
+.language-swift:after {
 	content:"SWIFT"
 }
-.highlight.ruby .code:after {
+.language-ruby:after {
 	content:"RUBY"
 }
-.highlight.perl .code:after {
+.language-perl:after {
 	content:"PERL"
 }
-.highlight.php .code:after {
+.language-php:after {
 	content:"PHP"
 }
-.highlight.c .code:after {
+.language-c:after {
 	content:"C"
 }
-.highlight.java .code:after {
+.language-java:after {
 	content:"JAVA"
 }
-.highlight.cpp .code:after {
+.language-cpp:after {
 	content:"CPP"
 }
-.highlight.ts .code:after {
+.language-ts:after {
 	content:"TS"
 }
-.highlight.cpp .code:after {
+.language-cpp:after {
 	content:'C++'
 }
-pre {
+
+
+.hljs {
+	position:relative;
+	margin:1em 0;
+	border-radius:2px;
+	line-height:1.1em;
+	background-color:#f8f8f8;
+	overflow-x:auto;
+	display:block;
+	overflow-x:auto;
+	padding:.5em;
+	background:#f0f0f0;
+	padding:1.2em 1.4em;
+}
+.hljs,.hljs-subst {
 	color:#525252
 }
-pre .function .keyword,pre .constant {
-	color:#0092db
-}
-pre .keyword,pre .attribute {
-	color:#e96900
-}
-pre .number,pre .literal {
-	color:#ae81ff
-}
-pre .tag,pre .tag .title,pre .change,pre .winutils,pre .flow,pre .lisp .title,pre .clojure .built_in,pre .nginx .title,pre .tex .special {
-	color:#2973b7
-}
-pre .symbol,pre .symbol .string,pre .value,pre .regexp {
-	color:#42b983
-}
-pre .title {
-	color:#83B917
-}
-pre .tag .value,pre .string,pre .subst,pre .haskell .type,pre .preprocessor,pre .ruby .class .parent,pre .built_in,pre .sql .aggregate,pre .django .template_tag,pre .django .variable,pre .smalltalk .class,pre .javadoc,pre .django .filter .argument,pre .smalltalk .localvars,pre .smalltalk .array,pre .attr_selector,pre .pseudo,pre .addition,pre .stream,pre .envvar,pre .apache .tag,pre .apache .cbracket,pre .tex .command,pre .prompt {
-	color:#42b983
-}
-pre .comment,pre .java .annotation,pre .python .decorator,pre .template_comment,pre .pi,pre .doctype,pre .shebang,pre .apache .sqbracket,pre .tex .formula {
+.hljs-comment {
 	color:#b3b3b3
 }
-pre .deletion {
+.hljs-attribute,.hljs-doctag,.hljs-keyword,.hljs-meta-keyword,.hljs-name,.hljs-selector-tag {
+	font-weight:600;
+	color:#0092db
+}
+.hljs-deletion,.hljs-number,.hljs-quote,.hljs-selector-class,.hljs-selector-id,.hljs-string,.hljs-template-tag,.hljs-type {
 	color:#BA4545
 }
-pre .coffeescript .javascript,pre .javascript .xml,pre .tex .formula,pre .xml .javascript,pre .xml .vbscript,pre .xml .css,pre .xml .cdata {
-	opacity:0.5
+.hljs-section,.hljs-title {
+	color:#83B917
 }
+.hljs-link,.hljs-regexp,.hljs-selector-attr,.hljs-selector-pseudo,.hljs-symbol,.hljs-template-variable,.hljs-variable {
+	color:#42b983
+}
+.hljs-literal {
+	color:#ae81ff
+}
+.hljs-addition,.hljs-built_in,.hljs-bullet,.hljs-code {
+	color:#83B917
+}
+.hljs-meta {
+	color:#1f7199
+}
+.hljs-meta-string {
+	color:#4d99bf
+}
+.hljs-emphasis {
+	font-style:italic
+}
+.hljs-strong {
+	font-weight:700
+}
+
+
+
+
+
+
+
+
 #pagination {
 	margin:4em 0;
 	padding-left:0.6rem;
