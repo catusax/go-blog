@@ -1,5 +1,6 @@
 import React from 'react';
 import request from '@/utils/request';
+import Comment from '../components/comment'
 declare var hljs: { highlightBlock: (arg0: Element) => void; }
 declare var title:string
 
@@ -13,6 +14,7 @@ class Archive extends React.Component<any> {
       Title: "",
       Update: "",
       HTML: "",
+      Comment: true,
     }
   }
 
@@ -47,12 +49,15 @@ class Archive extends React.Component<any> {
 
   componentDidMount() {
     this.getdata()
-    this.highlightCallBack();
   }
 
 
   render() {
+    const elements =[]
+    if (this.state.post.Comment)
+    elements.push(<Comment title={this.state.post.Title}/>)
     return (
+      <>
       <section className="container">
         <div className="post">
           <article className="post-block">
@@ -63,6 +68,8 @@ class Archive extends React.Component<any> {
             <div className="post-info">last updated: {this.state.post.Update}</div></article>
         </div>
       </section>
+      {elements}
+      </>
     );
   }
 }

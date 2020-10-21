@@ -9,7 +9,8 @@ export default class Comment extends React.Component<props>{
     constructor(props: props) {
         super(props)
     }
-    componentDidMount(){
+    componentDidUpdate(){
+        console.log(this.props.title)
         var gitalk = new Gitalk({
             clientID: gitalkconf.clientID,
             clientSecret: gitalkconf.clientSecret,
