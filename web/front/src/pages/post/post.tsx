@@ -1,5 +1,5 @@
 import React from 'react';
-import './post.less'
+import './post.css'
 import request from '@/utils/request';
 import { Link } from 'umi';
 import Comment from '../components/comment'

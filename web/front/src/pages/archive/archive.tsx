@@ -1,6 +1,6 @@
 import React from 'react';
-import './archive.less';
-import { Link } from 'umi';
+import './archive.css';
+import { Link, history } from 'umi';
 import request from '@/utils/request';
 import Pagination from '@/layouts/components/pagination'
 import siteinfo from '@/utils/siteinfo';
@@ -11,7 +11,7 @@ class Archive extends React.Component<any> {
   }
   state = {
     pagination: {
-      current: this.props.match.params.page||1,
+      current: parseInt(this.props.match.params.page)||1,
       pagesize: 10,
       total: 0,
     },
@@ -25,36 +25,40 @@ class Archive extends React.Component<any> {
     }],
   }
 
-  
-  get = (page?:number) => {
+
+  get = (page?: number) => {
     return request("/api/public/archives", {
       method: "get",
       params: {
-        page: page||this.props.match.params.page,
+        page: page || this.props.match.params.page,
         pagesize: this.state.pagination.pagesize,
       },
     })
   }
 
-  getdata = async (page?:number) => {
-    let data = await this.get(page||undefined)
+  getdata = async (page?: number) => {
+    let data = await this.get(page || undefined)
     this.setState({
       data: data.archives,
-      pagination:{
-        current: page||this.state.pagination.current,
+      pagination: {
+        current: page || this.state.pagination.current,
         pagesize: this.state.pagination.pagesize,
-        total:data.total,
+        total: data.total,
       }
     })
   }
 
-  componentDidMount() {
-    this.getdata()
-    document.title = 'Archive · '+ siteinfo.SiteName
+  componentWillReceiveProps(newprop: any) {
+    this.getdata(parseInt(newprop.match.params.page))
   }
 
-  paginationhandle = async(page:number)=>{
-    this.getdata(page)
+  componentDidMount() {
+    this.getdata()
+    document.title = 'Archive · ' + siteinfo.SiteName
+  }
+
+  paginationhandle = (page: number) => {
+    history.push('/archives/page/' + page)
   }
 
 

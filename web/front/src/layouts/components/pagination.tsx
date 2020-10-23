@@ -1,4 +1,5 @@
 import React from 'react'
+import './pagination.css'
 
 interface prop {
     onChange: onchange

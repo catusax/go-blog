@@ -1,6 +1,7 @@
 import request from '@/utils/request';
 import React from 'react';
-import {NavLink} from 'umi'
+import { NavLink } from 'umi';
+import './header.css'
 
 class Header extends React.Component<any> {
     constructor(props:any){
@@ -49,7 +50,7 @@ class Header extends React.Component<any> {
         })
         return (
             <header>
-                <a className="logo-link" href="/"><img src="/favicon.png"></img></a>
+                <a className="logo-link" href="/"><img src="/static/avatar.png"></img></a>
                 <ul className="nav nav-list">
                     <li className="nav-list-item"><NavLink activeClassName="active" className="nav-list-link" to="/" isActive={(_, location) => {
           if (location.pathname != '/' && location.pathname.search("^/page/")) return false

@@ -2,6 +2,7 @@ import React from 'react';
 import request from '@/utils/request';
 import Comment from '../components/comment'
 import siteinfo from '@/utils/siteinfo';
+import '../post/post.css'
 declare var hljs: { highlightBlock: (arg0: Element) => void; }
 declare var title:string
 

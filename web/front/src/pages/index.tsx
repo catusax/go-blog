@@ -1,8 +1,9 @@
 import React from 'react';
-import { Link } from 'umi';
+import { Link,history } from 'umi';
 import request from '@/utils/request';
 import Pagination from '@/layouts/components/pagination'
 import siteinfo from '@/utils/siteinfo'
+import './index.css'
 
 class Archive extends React.Component<any> {
   constructor(props: any) {
@@ -10,7 +11,7 @@ class Archive extends React.Component<any> {
   }
   state = {
     pagination: {
-      current: 1,
+      current: parseInt(this.props.match.params.page)||1,
       pagesize: 10,
       total: 0,
     },
@@ -45,13 +46,17 @@ class Archive extends React.Component<any> {
     })
   }
 
+  componentWillReceiveProps(newprop: any) {
+    this.getdata(parseInt(newprop.match.params.page))
+  }
+
   componentDidMount() {
     this.getdata()
     document.title = siteinfo.SiteName
   }
 
-  paginationhandle = async (page: number) => {
-    this.getdata(page)
+  paginationhandle = (page: number) => {
+    history.push("/page/"+page)
   }
 
 

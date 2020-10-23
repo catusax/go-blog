@@ -1,0 +1,25 @@
+.archive {
+	max-width:500px;
+	margin:5em auto
+}
+.archive .post-item {
+	padding:2px 0 0 50px
+}
+.archive .post-time,.archive .post-archive-link {
+	font-size:1rem
+}
+.archive .post-archive-link {
+	color:#42b983;
+	word-break:break-all
+}
+.archive a {
+	color:#42b983
+}
+.archive a.post-title-link:before {
+	height:1px
+}
+.archive .post-info {
+	float:left;
+	width:125px;
+	color:#7f8c8d
+}
