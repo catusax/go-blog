@@ -7,6 +7,13 @@ export default () => {
   return (
     <PageContainer content="在此处编辑关于页面" className={styles.main}>
       <PageForm name="ABOUT" id={2} />
+      <div
+        style={{
+          paddingTop: 50,
+          textAlign: 'center',
+        }}
+      >
+      </div>
     </PageContainer>
   );
 };

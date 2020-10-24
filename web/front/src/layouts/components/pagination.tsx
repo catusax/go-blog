@@ -22,12 +22,13 @@ class Pagination extends React.Component<prop>{
         total: this.props.total
     }
 
-    componentWillReceiveProps(props: { current: any; pagesize: any; total: any; }) {
-        this.setState({
-            current: props.current,
-            pagesize: props.pagesize,
-            total: props.total
-        })
+    componentDidUpdate(prevprops: any) {
+        if (this.props != prevprops)
+            this.setState({
+                current: this.props.current,
+                pagesize: this.props.pagesize,
+                total: this.props.total
+            })
     }
 
     pagination(): any {

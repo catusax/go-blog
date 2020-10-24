@@ -1,17 +1,17 @@
 import React from 'react';
-import { Link,history } from 'umi';
+import { Link, history } from 'umi';
 import request from '@/utils/request';
 import Pagination from '@/layouts/components/pagination'
-import siteinfo from '@/utils/siteinfo'
 import './index.css'
 
 class Archive extends React.Component<any> {
   constructor(props: any) {
     super(props)
+    this.getdata()
   }
   state = {
     pagination: {
-      current: parseInt(this.props.match.params.page)||1,
+      current: parseInt(this.props.match.params.page) || 1,
       pagesize: 10,
       total: 0,
     },
@@ -24,7 +24,7 @@ class Archive extends React.Component<any> {
   }
 
 
-  get = (page?:number) => {
+  get = (page?: number) => {
     return request("/api/public/index", {
       method: "get",
       params: {
@@ -34,29 +34,26 @@ class Archive extends React.Component<any> {
     })
   }
 
-  getdata = async (page?:number) => {
-    let data = await this.get(page||undefined)
+  getdata = async (page?: number) => {
+    let data = await this.get(page || undefined)
     this.setState({
       data: data.posts,
       pagination: {
-        current: page||this.state.pagination.current,
+        current: page || this.state.pagination.current,
         pagesize: this.state.pagination.pagesize,
         total: data.total,
       }
     })
   }
 
-  componentWillReceiveProps(newprop: any) {
-    this.getdata(parseInt(newprop.match.params.page))
-  }
-
-  componentDidMount() {
-    this.getdata()
-    document.title = siteinfo.SiteName
+  componentDidUpdate(prevprops: any) {
+    if (this.props.match.params.page != prevprops.match.params.page)
+      this.getdata(parseInt(this.props.match.params.page))
+    document.title = sessionStorage.getItem("SiteName") || ""
   }
 
   paginationhandle = (page: number) => {
-    history.push("/page/"+page)
+    history.push("/page/" + page)
   }
 
 
@@ -66,16 +63,16 @@ class Archive extends React.Component<any> {
       let link = "/post/" + post.ID
       elements.push(
 
-          <li className="post-list-item">
-            <article className="post-block">
-              <h2 className="post-title">
-                <Link className="post-title-link" to={link} >{post.Title}</Link>
-              </h2>
-              <div className="post-info">{post.Update}</div>
-              <div className="post-content" dangerouslySetInnerHTML={{ __html: post.Description }}></div>
-              <Link className="read-more" to={link} >...more</Link>
-            </article>
-          </li>
+        <li className="post-list-item">
+          <article className="post-block">
+            <h2 className="post-title">
+              <Link className="post-title-link" to={link} >{post.Title}</Link>
+            </h2>
+            <div className="post-info">{post.Update}</div>
+            <div className="post-content" dangerouslySetInnerHTML={{ __html: post.Description }}></div>
+            <Link className="read-more" to={link} >...more</Link>
+          </article>
+        </li>
       )
     }
 

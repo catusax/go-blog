@@ -6,3 +6,7 @@ declare module '*.svg' {
   const url: string
   export default url
 }
+declare module 'disqusjs' {
+  const content: any
+  export = content
+}

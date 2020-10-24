@@ -2,12 +2,11 @@ import React from 'react';
 import { Link } from 'umi';
 import request from '@/utils/request';
 import Pagination from '@/layouts/components/pagination';
-import siteinfo from '@/utils/siteinfo';
-declare var title :string
 
 class Archive extends React.Component<any> {
   constructor(props: any) {
     super(props)
+    this.getdata()
   }
   state = {
     tag: this.props.match.params.name,
@@ -47,11 +46,7 @@ class Archive extends React.Component<any> {
   }
 
   componentDidUpdate(){
-    document.title = this.state.tag+ ' · '+siteinfo.SiteName
-  }
-
-  componentDidMount() {
-    this.getdata()
+      document.title = this.state.tag+ ' · ' + sessionStorage.getItem("SiteName")
   }
 
   paginationhandle = async(page:number)=>{

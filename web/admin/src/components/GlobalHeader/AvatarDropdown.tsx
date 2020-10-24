@@ -1,4 +1,4 @@
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { LogoutOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
 import React from 'react';
 import { history, ConnectProps, connect } from 'umi';
@@ -29,7 +29,13 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
           type: 'login/logout',
         });
       }
-
+      {//删除cookie
+        var keys = document.cookie.match(/[^ =;]+(?=\=)/g);
+        if (keys) {
+            for (var i = keys.length; i--;)
+                document.cookie = keys[i] + '=0;expires=' + new Date(0).toUTCString()
+        }
+    }
       return;
     }
 
@@ -42,24 +48,9 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
         avatar: '',
         name: '',
       },
-      menu,
     } = this.props;
     const menuHeaderDropdown = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={this.onMenuClick}>
-        {menu && (
-          <Menu.Item key="center">
-            <UserOutlined />
-            个人中心
-          </Menu.Item>
-        )}
-        {menu && (
-          <Menu.Item key="settings">
-            <SettingOutlined />
-            个人设置
-          </Menu.Item>
-        )}
-        {menu && <Menu.Divider />}
-
         <Menu.Item key="logout">
           <LogoutOutlined />
           退出登录

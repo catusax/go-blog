@@ -3,15 +3,15 @@ import './archive.css';
 import { Link, history } from 'umi';
 import request from '@/utils/request';
 import Pagination from '@/layouts/components/pagination'
-import siteinfo from '@/utils/siteinfo';
 
 class Archive extends React.Component<any> {
   constructor(props: any) {
     super(props)
+    this.getdata()
   }
   state = {
     pagination: {
-      current: parseInt(this.props.match.params.page)||1,
+      current: parseInt(this.props.match.params.page) || 1,
       pagesize: 10,
       total: 0,
     },
@@ -48,19 +48,16 @@ class Archive extends React.Component<any> {
     })
   }
 
-  componentWillReceiveProps(newprop: any) {
-    this.getdata(parseInt(newprop.match.params.page))
-  }
 
-  componentDidMount() {
-    this.getdata()
-    document.title = 'Archive · ' + siteinfo.SiteName
+  componentDidUpdate(prevprops:any) {
+    if (this.props.match.params.page != prevprops.match.params.page)
+      this.getdata(parseInt(this.props.match.params.page))
+    document.title = 'Archive · ' + sessionStorage.getItem("SiteName")
   }
 
   paginationhandle = (page: number) => {
     history.push('/archives/page/' + page)
   }
-
 
   render() {
     const elements: any = []

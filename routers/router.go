@@ -21,8 +21,8 @@ func loadRouters(router *gin.Engine) {
 	})
 
 	// 设置静态文件夹,仅用于测试，部署时请使用nginx or caddy
-	router.Static("/font", "./static/font")
-	router.StaticFile("/favicon.png", "./static/favicon.png")
+	router.Static("/static", "./static")
+	router.StaticFile("/favicon.ico", "./static/favicon.ico")
 	router.StaticFile("/", "./web/front/dist/index.html")
 	router.StaticFile("/umi.css", "./web/front/dist/umi.css")
 	router.StaticFile("/umi.js", "./web/front/dist/umi.js")
@@ -48,15 +48,35 @@ func loadRouters(router *gin.Engine) {
 			pages.POST("/new", ctrs.NewPage)
 		}
 
+		setting := api.Group("/settings")
+		setting.Use(ctrs.AuthMiddleWare())
+		{
+			setting.POST("/avatar", ctrs.UploadAvatar)
+			setting.POST("/favicon", ctrs.UploadFavicon)
+			setting.POST("/changeconfig", ctrs.ChangeConfig)
+			setting.GET("/getconfig", ctrs.GetConfig)
+		}
+
+		statistic := api.Group("/statistic")
+		statistic.Use(ctrs.AuthMiddleWare())
+		{
+			statistic.GET("/recentpost", ctrs.RecentPost)
+			statistic.GET("/recentvisit", ctrs.RecentVisit)
+			statistic.GET("/mostreaded", ctrs.MostReaded)
+			statistic.GET("/browser", ctrs.Browsers)
+			statistic.GET("/os", ctrs.OS)
+		}
+
 		api.GET("/currentUser", ctrs.AuthMiddleWare(), ctrs.CurrentUser)
 
 		public := api.Group("/public")
 		{
 			public.GET("/index", ctrs.Index)
 			public.GET("/archives", ctrs.Archive)
-			public.GET("/post", ctrs.Post)
+			public.GET("/post", ctrs.Visitor(), ctrs.Post)
 			public.POST("/login", ctrs.Login)
 			public.GET("/tag", ctrs.Tag)
+			public.GET("/info", ctrs.Info)
 		}
 	}
 }

@@ -1,0 +1,13 @@
+#disqus_thread {
+    margin-bottom:2em;
+    padding:1em
+}
+
+@media screen and (max-width:700px) {
+	.wrap {
+	width:100%
+}
+#disqus_thread {
+    margin:2em 10px
+}
+}

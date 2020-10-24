@@ -3,6 +3,7 @@ package main
 import (
 	"io"
 	"os"
+	"strconv"
 
 	"blog/routers"
 	"blog/utils"
@@ -24,9 +25,10 @@ func main() {
 	corsconf := cors.DefaultConfig()
 	corsconf.AllowCredentials = true
 	corsconf.AllowOrigins = []string{"http://localhost:8000", "http://localhost:8001", "http://127.0.0.1", "http://blog.coolrc.me"}
+	corsconf.AllowHeaders = []string{"x-requested-with", "content-type"}
 
 	r.Use(cors.New(corsconf))
 	// 加载路由
 	routers.LoadRouters(r)
-	r.Run(":" + utils.C.Port)
+	r.Run(":" + strconv.Itoa(utils.C.Port))
 }

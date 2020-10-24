@@ -1,19 +1,25 @@
 import request from './request'
-
-var siteinfo = {
-    SiteName: "BLOG",
-    Gitalk: {
-        Owner: 'qqwwee',
-        Repo: '11223',
-        ClientID: 'fghfhf3660',
-        ClientSecret: 'asdfsdf',
+export default async function getinfo() {
+    var siteinfo = {
+        SiteName: "BLOG",
+        Gitalk: {
+            Owner: 'qqwwee',
+            Repo: '11223',
+            ClientID: 'fghfhf3660',
+            ClientSecret: 'asdfsdf',
+        },
+        Disqus: {
+            shortname: "name",
+            apikey: "apikey",
+            siteName: '',
+            api: "https://disqus.skk.moe/disqus/",
+            admin: '',
+            adminLabel: '',
+        }
     }
-}
-
-const getinfo = async () => {
     let data = await request("/api/public/info")
     siteinfo.SiteName = data.SiteName
     siteinfo.Gitalk = data.Gitalk
+    siteinfo.Disqus = data.Disqus
+    return siteinfo
 }
-getinfo()
-export default siteinfo

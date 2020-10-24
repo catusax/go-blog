@@ -1,5 +1,5 @@
 import React from 'react'
-import './comment.css'
+import './gitalk.css'
 import Gitalk from 'gitalk'
 import siteinfo from '@/utils/siteinfo'
 interface props {

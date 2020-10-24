@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"encoding/json"
 	"log"
 
 	"github.com/spf13/viper"
@@ -8,15 +9,16 @@ import (
 
 //Config 配置文件
 type Config struct {
-	Port string
-	DB   DB
-	User User
+	Port     int
+	SiteName string
+	DB       DB
+	User     User
 }
 
 //DB 数据库配置
 type DB struct {
 	Host     string
-	Port     string
+	Port     int
 	User     string
 	Password string
 	Name     string
@@ -44,4 +46,20 @@ func init() {
 		log.Fatal("解析配置文件失败：", err)
 	}
 
+}
+
+//WriteConf 将更改后的配置写入配置文件
+func WriteConf(data []byte) error {
+	var config map[string]interface{}
+	//json.NewDecoder(map1).Decode(&b)
+	err := json.Unmarshal(data, &config)
+	if err != nil {
+		return err
+	}
+	for k, v := range config {
+		viper.Set(k, v)
+	}
+	viper.Unmarshal(&C)
+	viper.WriteConfig()
+	return nil
 }

@@ -2,14 +2,14 @@ import React from 'react';
 import './post.css'
 import request from '@/utils/request';
 import { Link } from 'umi';
-import Comment from '../components/comment'
-import siteinfo from '@/utils/siteinfo';
+import Comment from '../components/disqus'
 declare var hljs: { highlightBlock: (arg0: Element) => void; }
 declare var title:string
 
 class Archive extends React.Component<any> {
   constructor(props: any) {
     super(props)
+    this.getdata()
   }
   state = {
     post: {
@@ -41,7 +41,7 @@ class Archive extends React.Component<any> {
 
   componentDidUpdate() {
     this.highlightCallBack();
-    document.title = this.state.post.Title+ ' · '+siteinfo.SiteName
+    document.title = this.state.post.Title+ ' · '+sessionStorage.getItem("SiteName")
   }
 
   highlightCallBack = () => {
@@ -50,10 +50,6 @@ class Archive extends React.Component<any> {
       catch (e) { console.log(e); }
     });
   };
-
-  componentDidMount() {
-    this.getdata()
-  }
 
   render() {
     let elements: any = []

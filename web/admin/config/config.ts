@@ -50,8 +50,8 @@ export default defineConfig({
             },
             {
               path: '/welcome',
-              name: 'welcome',
-              icon: 'smile',
+              name: '首页',
+              icon: 'Dashboard',
               component: './Welcome',
             },
             {
@@ -68,15 +68,21 @@ export default defineConfig({
             },
             {
               name: '友链',
-              icon: 'smile',
+              icon: 'Link',
               path: '/links',
               component: './Links',
             },
             {
               name: '关于',
-              icon: 'smile',
+              icon: 'InfoCircleOutlined',
               path: '/about',
               component: '@/pages/About',
+            },
+            {
+              name: '设置',
+              icon: 'setting',
+              path: '/setting',
+              component: './Setting',
             },
             {
               component: './404',

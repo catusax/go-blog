@@ -234,12 +234,6 @@ table tbody td {
 }
 
 
-.ds-thread,#disqus_thread {
-	margin-bottom:2em
-}
-
-
-
 /*mq*/
 section.container {
 	margin:2em 10px
@@ -277,9 +271,6 @@ section.container,.home.post-list,.archive {
 .post-content h2,.post-content h3,.post-content h4,.post-content h5,.post-content h6 {
 	max-width:300px;
 	left:15px
-}
-.ds-thread,#disqus_thread {
-	margin:2em 10px
 }
 }
 

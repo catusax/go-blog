@@ -1,14 +1,15 @@
 import React from 'react';
 import request from '@/utils/request';
-import Comment from '../components/comment'
-import siteinfo from '@/utils/siteinfo';
+import Comment from '../components/disqus'
+import getinfo from '@/utils/siteinfo';
 import '../post/post.css'
 declare var hljs: { highlightBlock: (arg0: Element) => void; }
-declare var title:string
+declare var title: string
 
 class Archive extends React.Component<any> {
   constructor(props: any) {
     super(props)
+    this.getdata()
   }
   state = {
     post: {
@@ -20,26 +21,27 @@ class Archive extends React.Component<any> {
     }
   }
 
-  get = () => {
+  get = (page?: number) => {
     return request("/api/pages/page", {
       method: "get",
       params: {
-        page: this.props.match.params.pageid,
+        page: page || this.props.match.params.pageid,
       },
     })
   }
 
-  getdata = async () => {
-    let data = await this.get()
+  getdata = async (page?: number) => {
+    let data = await this.get(page || undefined)
     this.setState({
       post: data.page
     })
   }
 
   componentDidUpdate(prevProps: any) {
-    if (this.props.match.params.pageid !== prevProps.match.params.pageid)  this.getdata()
+    if (this.props.match.params.pageid != prevProps.match.params.pageid)
+      this.getdata(this.props.match.params.pageid)
     this.highlightCallBack();
-    document.title = this.state.post.Title+ ' · '+ siteinfo.SiteName
+    document.title = this.state.post.Title + ' · ' + sessionStorage.getItem("SiteName")
   }
 
   highlightCallBack = () => {
@@ -49,28 +51,23 @@ class Archive extends React.Component<any> {
     });
   };
 
-  componentDidMount() {
-    this.getdata()
-  }
-
-
   render() {
-    const elements =[]
+    const elements = []
     if (this.state.post.Comment)
-    elements.push(<Comment title={this.state.post.Title}/>)
+      elements.push(<Comment title={this.state.post.Title} />)
     return (
       <>
-      <section className="container">
-        <div className="post">
-          <article className="post-block">
-            <h1 className="post-title">{this.state.post.Title}</h1>
-            <div className="post-info">{this.state.post.Update}</div>
-            <div dangerouslySetInnerHTML={{ __html: this.state.post.HTML }} className="post-content">
-            </div>
-            <div className="post-info">last updated: {this.state.post.Update}</div></article>
-        </div>
-      </section>
-      {elements}
+        <section className="container">
+          <div className="post">
+            <article className="post-block">
+              <h1 className="post-title">{this.state.post.Title}</h1>
+              <div className="post-info">{this.state.post.Update}</div>
+              <div dangerouslySetInnerHTML={{ __html: this.state.post.HTML }} className="post-content">
+              </div>
+              <div className="post-info">last updated: {this.state.post.Update}</div></article>
+          </div>
+        </section>
+        {elements}
       </>
     );
   }
