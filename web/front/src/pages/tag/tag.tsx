@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'umi';
 import request from '@/utils/request';
 import Pagination from '@/layouts/components/pagination';
+import siteinfo from '@/utils/siteinfo';
 declare var title :string
 
 class Archive extends React.Component<any> {
@@ -21,7 +22,6 @@ class Archive extends React.Component<any> {
         Update: "",
       }]
   }
-
   
   get = (page?:number) => {
     return request("/api/public/tag", {
@@ -47,7 +47,7 @@ class Archive extends React.Component<any> {
   }
 
   componentDidUpdate(){
-    document.title = this.state.tag+ ' · '+ title
+    document.title = this.state.tag+ ' · '+siteinfo.SiteName
   }
 
   componentDidMount() {
@@ -57,7 +57,6 @@ class Archive extends React.Component<any> {
   paginationhandle = async(page:number)=>{
     this.getdata(page)
   }
-
 
   render() {
     const elements: any = []

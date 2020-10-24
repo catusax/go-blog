@@ -3,6 +3,7 @@ import './post.less'
 import request from '@/utils/request';
 import { Link } from 'umi';
 import Comment from '../components/comment'
+import siteinfo from '@/utils/siteinfo';
 declare var hljs: { highlightBlock: (arg0: Element) => void; }
 declare var title:string
 
@@ -40,7 +41,7 @@ class Archive extends React.Component<any> {
 
   componentDidUpdate() {
     this.highlightCallBack();
-    document.title = this.state.post.Title+ ' · '+ title
+    document.title = this.state.post.Title+ ' · '+siteinfo.SiteName
   }
 
   highlightCallBack = () => {

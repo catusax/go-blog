@@ -3,6 +3,7 @@ import './archive.less';
 import { Link } from 'umi';
 import request from '@/utils/request';
 import Pagination from '@/layouts/components/pagination'
+import siteinfo from '@/utils/siteinfo';
 
 class Archive extends React.Component<any> {
   constructor(props: any) {
@@ -49,6 +50,7 @@ class Archive extends React.Component<any> {
 
   componentDidMount() {
     this.getdata()
+    document.title = 'Archive · '+ siteinfo.SiteName
   }
 
   paginationhandle = async(page:number)=>{

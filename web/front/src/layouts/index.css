@@ -410,7 +410,8 @@ header .nav-list-item a {
 	max-width:95%
 }
 code,pre {
-	font-size:0.8em;
+	font-size:0.9em;
+	line-height: 1.5em;
 	font-family:"Roboto Mono",Monaco,courier,monospace
 }
 
@@ -491,7 +492,6 @@ code:after {
 	position:relative;
 	margin:1em 0;
 	border-radius:2px;
-	line-height:1.1em;
 	background-color:#f8f8f8;
 	overflow-x:auto;
 	display:block;
@@ -510,8 +510,11 @@ code:after {
 	font-weight:600;
 	color:#0092db
 }
-.hljs-deletion,.hljs-number,.hljs-quote,.hljs-selector-class,.hljs-selector-id,.hljs-string,.hljs-template-tag,.hljs-type {
-	color:#BA4545
+.hljs-number,.hljs-quote,.hljs-selector-class,.hljs-selector-id,.hljs-string,.hljs-template-tag,.hljs-type {
+	color: #42b983;
+}
+.hljs-deletion{
+	color: #BA4545;
 }
 .hljs-section,.hljs-title {
 	color:#83B917
@@ -628,24 +631,24 @@ footer .copyright a:hover {
 }
 @font-face {
 	font-family:"Source Sans Pro";
-	src:local("Source Sans Pro"),url(/font/Source_Sans_Pro/SourceSansPro-Regular.ttf)
+	src:local("Source Sans Pro"),url(/static/font/Source_Sans_Pro/SourceSansPro-Regular.ttf)
 }
 @font-face {
 	font-family:"Source Sans Pro";
-	src:local("Source Sans Pro Light"),url(/font/Source_Sans_Pro/SourceSansPro-Light.ttf);
+	src:local("Source Sans Pro Light"),url(/static/font/Source_Sans_Pro/SourceSansPro-Light.ttf);
 	font-weight:300
 }
 @font-face {
 	font-family:"Source Sans Pro";
-	src:local("Source Sans Pro Semibold"),url(/font/Source_Sans_Pro/SourceSansPro-Semibold.ttf);
+	src:local("Source Sans Pro Semibold"),url(/static/font/Source_Sans_Pro/SourceSansPro-Semibold.ttf);
 	font-weight:600
 }
 @font-face {
 	font-family:"Roboto Mono";
-	src:local("Roboto Mono"),url(/font/Roboto_Mono/RobotoMono-Regular.ttf)
+	src:local("Roboto Mono"),url(/static/font/Roboto_Mono/RobotoMono-Regular.ttf)
 }
 @font-face {
 	font-family:"Dosis";
-	src:local("Dosis Medium"),url(/font/Dosis/Dosis-Medium.ttf);
+	src:local("Dosis Medium"),url(/static/font/Dosis/Dosis-Medium.ttf);
 	font-weight:500
 }

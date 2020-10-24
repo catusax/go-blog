@@ -11,13 +11,6 @@ export default defineConfig({
     type: 'none',
   },
   define:{
-    title: title,
-    gitalkconf:{
-      owner: 'qwe',
-      repo: 'qwe',
-      clientID: 'qqwweerr',
-      clientSecret: 'qwerqwerqwerqwer',
-    }
   },
   routes: [
     {
@@ -26,8 +19,7 @@ export default defineConfig({
       routes: [
         {
           path: '/',
-          component: '@/pages/index', 
-          title: title
+          component: '@/pages/index',
         },
         {
           path: '/page/:page',
@@ -37,12 +29,10 @@ export default defineConfig({
         {
           path: '/archives',
           component: '@/pages/archive/archive',
-          title: 'Archives · '+ title
         },
         {
           path: '/archives/page/:page',
           component: '@/pages/archive/archive',
-          title: 'Archives · '+ title
         },
         {
           path: '/post/:id',
