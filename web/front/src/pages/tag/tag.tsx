@@ -11,18 +11,18 @@ class Archive extends React.Component<any> {
   state = {
     tag: this.props.match.params.name,
     pagination: {
-      current: this.props.match.params.page||1,
+      current: this.props.match.params.page || 1,
       pagesize: 10,
       total: 0,
     },
     data: [{
-        ID: 0,
-        Title: "",
-        Update: "",
-      }]
+      ID: 0,
+      Title: "",
+      Update: "",
+    }]
   }
-  
-  get = (page?:number) => {
+
+  get = (page?: number) => {
     return request("/api/public/tag", {
       method: "get",
       params: {
@@ -33,42 +33,43 @@ class Archive extends React.Component<any> {
     })
   }
 
-  getdata = async (page?:number) => {
-    let data = await this.get(page||undefined)
+  getdata = async (page?: number) => {
+    let data = await this.get(page || undefined)
     this.setState({
       data: data.posts,
-      pagination:{
+      pagination: {
         current: this.state.pagination.current,
         pagesize: this.state.pagination.pagesize,
-        total:data.total,
+        total: data.total,
       }
     })
   }
 
-  componentDidUpdate(){
-      document.title = this.state.tag+ ' · ' + sessionStorage.getItem("SiteName")
+  componentDidUpdate() {
+    if (this.props.siteinfo)
+      document.title = this.state.tag + ' · ' + this.props.siteinfo.SiteName
   }
 
-  paginationhandle = async(page:number)=>{
+  paginationhandle = async (page: number) => {
     this.getdata(page)
   }
 
   render() {
     const elements: any = []
-      this.state.data.forEach((post) => {
-        let link = "/post/" + post.ID
-        elements.push(
-          <div className="post-item">
-            <div className="post-info">{post.Update}</div>
-            <Link className="post-title-link" to={link} >{post.Title}</Link>
-          </div>
-        )
-      })
+    this.state.data.forEach((post) => {
+      let link = "/post/" + post.ID
+      elements.push(
+        <div className="post-item">
+          <div className="post-info">{post.Update}</div>
+          <Link className="post-title-link" to={link} >{post.Title}</Link>
+        </div>
+      )
+    })
 
     return (
       <><section className="container">
         <div className="archive">
-        <h2 className="archive-year">{this.state.tag}</h2>
+          <h2 className="archive-year">{this.state.tag}</h2>
           {elements}
         </div>
       </section>

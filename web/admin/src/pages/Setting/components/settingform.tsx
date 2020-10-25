@@ -5,16 +5,16 @@ import request from '@/utils/request'
 
 export default class SettingForm extends React.Component {
     state = {
-        Port: 8080,
-        SiteName: "wersefsfe",
-        DB: {
+        port: 8080,
+        sitename: "wersefsfe",
+        db: {
             host: "",
             port: 5432,
             user: "",
             password: "",
             name: "",
         },
-        Disqus: {
+        disqus: {
             shortname: "",
             apikey: "",
             siteName: "",
@@ -28,7 +28,7 @@ export default class SettingForm extends React.Component {
         this.setState(data)
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.getdata()
     }
 
@@ -51,9 +51,9 @@ export default class SettingForm extends React.Component {
     };
 
     onFinish = (values: any) => {
-        request("/api/settings/changeconfig",{
-            method:"post",
-            data:values
+        request("/api/settings/changeconfig", {
+            method: "post",
+            data: values
         }).then(
             message.success("修改成功")
         )
@@ -63,9 +63,9 @@ export default class SettingForm extends React.Component {
         return (
             <div className={style.container}>
                 <p>基本设置</p>
-                <Form key={this.state.SiteName} {...this.layout} name="nest-messages" onFinish={this.onFinish} validateMessages={this.validateMessages} initialValues={this.state}>
+                <Form key={this.state.sitename} {...this.layout} name="nest-messages" onFinish={this.onFinish} validateMessages={this.validateMessages} initialValues={this.state}>
                     <Form.Item
-                        name="SiteName"
+                        name="sitename"
                         label="博客名称"
                         rules={[
                             {
@@ -73,10 +73,17 @@ export default class SettingForm extends React.Component {
                             },
                         ]}
                     >
-                        <Input value={this.state.SiteName}/>
+                        <Input/>
                     </Form.Item>
                     <Form.Item
-                        name="Port"
+                        name='github'
+                        label="Github地址"
+                        extra='选填，菜单栏的Github链接'
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        name="port"
                         label="http端口"
                         rules={[
                             {
@@ -91,7 +98,7 @@ export default class SettingForm extends React.Component {
                     </Form.Item>
 
                     <Form.Item
-                        name={['DB', 'host']}
+                        name={['db', 'host']}
                         label="数据库地址"
                         rules={[{ required: true, }]}
                     >
@@ -99,7 +106,7 @@ export default class SettingForm extends React.Component {
                     </Form.Item>
 
                     <Form.Item
-                        name={['DB', 'port']}
+                        name={['db', 'port']}
                         label="数据库端口"
                         rules={[{ required: true, type: 'number' }]}
                     >
@@ -107,7 +114,7 @@ export default class SettingForm extends React.Component {
                     </Form.Item>
 
                     <Form.Item
-                        name={['DB', 'user']}
+                        name={['db', 'user']}
                         label="数据库用户名"
                         rules={[{ required: true, }]}
                     >
@@ -115,7 +122,7 @@ export default class SettingForm extends React.Component {
                     </Form.Item>
 
                     <Form.Item
-                        name={['DB', 'password']}
+                        name={['db', 'password']}
                         label="数据库密码"
                         rules={[{ required: true, }]}
                     >
@@ -123,39 +130,39 @@ export default class SettingForm extends React.Component {
                     </Form.Item>
 
                     <Form.Item
-                        name={['Disqus', 'shortname']}
+                        name={['disqus', 'shortname']}
                         label="Disqus shortname"
                     >
                         <Input />
                     </Form.Item>
 
                     <Form.Item
-                        name={['Disqus', 'apikey']}
+                        name={['disqus', 'apikey']}
                         label="Disqus apikey"
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        name={['Disqus', 'sitename']}
+                        name={['disqus', 'sitename']}
                         label="Disqus siteName"
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        name={['Disqus', 'api']}
+                        name={['disqus', 'api']}
                         label="Disqus api"
                         extra="选填，默认为：https://disqus.skk.moe/disqus/"
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        name={['Disqus', 'admin']}
+                        name={['disqus', 'admin']}
                         label="Disqus admin"
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        name={['Disqus', 'adminlabel']}
+                        name={['disqus', 'adminlabel']}
                         label="Disqus adminLabel"
                     >
                         <Input />

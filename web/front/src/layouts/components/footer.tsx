@@ -1,12 +1,22 @@
 import React from 'react'
 import './footer.css'
 
-class Footer extends React.Component {
+class Footer extends React.Component<{ siteinfo: siteinfo }> {
+    constructor(props: { siteinfo: siteinfo }) {
+        super(props)
+    }
+    state = {
+        SiteName: ''
+    }
+    componentDidUpdate(prevprops: any) {
+        if (!prevprops.siteinfo)
+            this.setState(this.props.siteinfo)
+    }
     render() {
         return (
             <footer>
                 <div className="copyright">
-                    <p>© 2015 - 2020 <a href="https://coolrc.me">coolrc</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.
+                    <p>© 2015 - 2020 <a href="/">{this.state.SiteName}</a>, powered by <a href="https://github.com/coolrc136/go-blog" target="_blank">Go-blog</a>.
                     </p>
                 </div>
             </footer>

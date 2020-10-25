@@ -49,10 +49,11 @@ class Archive extends React.Component<any> {
   }
 
 
-  componentDidUpdate(prevprops:any) {
+  componentDidUpdate(prevprops: any) {
     if (this.props.match.params.page != prevprops.match.params.page)
       this.getdata(parseInt(this.props.match.params.page))
-    document.title = 'Archive · ' + sessionStorage.getItem("SiteName")
+    if (this.props.siteinfo)
+      document.title = 'Archive · ' + this.props.siteinfo.SiteName
   }
 
   paginationhandle = (page: number) => {

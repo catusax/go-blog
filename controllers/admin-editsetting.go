@@ -2,12 +2,10 @@ package controllers
 
 import (
 	"blog/utils"
-	"io/ioutil"
-	"net/http"
-	"time"
-
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
+	"io/ioutil"
+	"net/http"
 )
 
 //UploadFavicon
@@ -51,6 +49,7 @@ func UploadAvatar(c *gin.Context) {
 		"status": "ok",
 	})
 }
+
 //ChangeConfig
 func ChangeConfig(c *gin.Context) {
 	data, _ := ioutil.ReadAll(c.Request.Body)
@@ -68,19 +67,5 @@ func ChangeConfig(c *gin.Context) {
 
 //GetConfig
 func GetConfig(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"SiteName": utils.C.SiteName,
-		"Port":     utils.C.Port,
-		"DB":       viper.GetStringMap("DB"),
-		"Disqus":   viper.GetStringMap("disqus"),
-	})
-}
-
-//Info
-func Info(c *gin.Context) {
-	time.Sleep(1 * time.Second)
-	c.JSON(http.StatusOK, gin.H{
-		"SiteName": utils.C.SiteName,
-		"Disqus":   viper.GetStringMap("disqus"),
-	})
+	c.JSON(http.StatusOK, viper.AllSettings())
 }

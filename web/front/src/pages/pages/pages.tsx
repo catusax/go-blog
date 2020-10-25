@@ -1,10 +1,7 @@
 import React from 'react';
 import request from '@/utils/request';
 import Comment from '../components/disqus'
-import getinfo from '@/utils/siteinfo';
 import '../post/post.css'
-declare var hljs: { highlightBlock: (arg0: Element) => void; }
-declare var title: string
 
 class Archive extends React.Component<any> {
   constructor(props: any) {
@@ -41,7 +38,8 @@ class Archive extends React.Component<any> {
     if (this.props.match.params.pageid != prevProps.match.params.pageid)
       this.getdata(this.props.match.params.pageid)
     this.highlightCallBack();
-    document.title = this.state.post.Title + ' · ' + sessionStorage.getItem("SiteName")
+    if (this.props.siteinfo)
+      document.title = this.state.post.Title + ' · ' + this.props.siteinfo.SiteName
   }
 
   highlightCallBack = () => {
@@ -54,7 +52,7 @@ class Archive extends React.Component<any> {
   render() {
     const elements = []
     if (this.state.post.Comment)
-      elements.push(<Comment title={this.state.post.Title} />)
+      elements.push(<Comment title={this.state.post.Title} siteinfo={this.props.siteinfo} />)
     return (
       <>
         <section className="container">

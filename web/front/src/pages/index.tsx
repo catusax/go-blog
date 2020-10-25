@@ -49,8 +49,17 @@ class Archive extends React.Component<any> {
   componentDidUpdate(prevprops: any) {
     if (this.props.match.params.page != prevprops.match.params.page)
       this.getdata(parseInt(this.props.match.params.page))
-    document.title = sessionStorage.getItem("SiteName") || ""
+    if (this.props.siteinfo)
+      document.title = this.props.siteinfo.SiteName
+      this.highlightCallBack()
   }
+
+  highlightCallBack = () => {
+    document.querySelectorAll("pre code").forEach(block => {
+      try { hljs.highlightBlock(block); }
+      catch (e) { console.log(e); }
+    });
+  };
 
   paginationhandle = (page: number) => {
     history.push("/page/" + page)

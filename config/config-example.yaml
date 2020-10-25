@@ -11,3 +11,12 @@ db:
 user:
     username: root
     password: password
+
+disqus:
+    admin: root
+    adminlabel: helloworld
+    apikey: qwewq
+    shortname: qwe
+    sitename: qwe
+sitename: helloworld
+github: ""
