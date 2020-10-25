@@ -12,16 +12,6 @@ export default class Comment extends React.Component<props>{
         super(props)
     }
 
-    // componentDidMount() {
-    //     getinfo().then((siteinfo) => {
-    //         const { Disqus } = siteinfo
-    //         DisqusJS({
-    //             ...Disqus,
-    //             title: this.props.title
-    //         });
-    //     })
-
-    // }
     componentDidUpdate() {
         if (this.props.siteinfo) {
             console.log(this.props.siteinfo)
