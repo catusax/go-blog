@@ -52,7 +52,7 @@ export default defineConfig({
               path: '/welcome',
               name: '首页',
               icon: 'Dashboard',
-              component: './Welcome',
+              component: './DashBoard/Welcome',
             },
             {
               name: '文章列表',
@@ -84,6 +84,12 @@ export default defineConfig({
               path: '/setting',
               component: './Setting',
             },
+            // {
+            //   name: '分析页',
+            //   icon: 'smile',
+            //   path: '/dashboardanalysis',
+            //   component: './DashboardAnalysis',
+            // },
             {
               component: './404',
             },

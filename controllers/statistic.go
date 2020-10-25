@@ -29,6 +29,14 @@ func Visitor() gin.HandlerFunc {
 	}
 }
 
+func TotalStatistic(c *gin.Context) {
+	visitors, posts := models.GetTotalStatistic()
+	c.JSON(http.StatusOK, gin.H{
+		"Visitors": visitors,
+		"Posts":    posts,
+	})
+}
+
 func RecentPost(c *gin.Context) {
 	c.JSON(http.StatusOK, models.GetRecentPost())
 }
@@ -37,8 +45,8 @@ func RecentVisit(c *gin.Context) {
 	c.JSON(http.StatusOK, models.GetRecentVisit())
 }
 
-func MostReaded(c *gin.Context) {
-	c.JSON(http.StatusOK, models.GetMostReadedPost())
+func MostRead(c *gin.Context) {
+	c.JSON(http.StatusOK, models.GetMostReadPost())
 }
 
 func Browsers(c *gin.Context) {

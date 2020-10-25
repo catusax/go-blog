@@ -12,6 +12,7 @@ func LoadRouters(router *gin.Engine) {
 	loadRouters(router)
 }
 
+//nolint:funlen
 func loadRouters(router *gin.Engine) {
 
 	router.GET("/status", func(c *gin.Context) {
@@ -60,9 +61,10 @@ func loadRouters(router *gin.Engine) {
 		statistic := api.Group("/statistic")
 		statistic.Use(ctrs.AuthMiddleWare())
 		{
+			statistic.GET("/total", ctrs.TotalStatistic)
 			statistic.GET("/recentpost", ctrs.RecentPost)
 			statistic.GET("/recentvisit", ctrs.RecentVisit)
-			statistic.GET("/mostreaded", ctrs.MostReaded)
+			statistic.GET("/mostread", ctrs.MostRead)
 			statistic.GET("/browser", ctrs.Browsers)
 			statistic.GET("/os", ctrs.OS)
 		}

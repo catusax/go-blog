@@ -29,16 +29,22 @@ func (v *Visitor) SetUA(ua string) {
 	v.Browser = client.UserAgent.Family
 }
 
+// GetTotalStatistic返回总PV和文章数
+func GetTotalStatistic() (totalvisitor int64, totalpost int64) {
+	db.Table("visitors").Count(&totalvisitor)
+	db.Table("posts").Count(&totalpost)
+	return
+}
+
 type RecentVisitor struct {
 	Date  string
 	Count int
 }
 
 //GetRecentVisit 获取最近一个月的访客数
-func GetRecentVisit() []RecentVisitor {
-	var visitor []RecentVisitor
+func GetRecentVisit() (visitor []RecentVisitor) {
 	db.Raw("select date(updated_at),count(date(updated_at)) from visitors where date_part('day',now()-updated_at)<=30 group by date order by date").Scan(&visitor)
-	return visitor
+	return
 }
 
 type RecentPost struct {
@@ -48,10 +54,9 @@ type RecentPost struct {
 }
 
 //GetRecentPost 最近更新的十篇文章
-func GetRecentPost() []RecentPost {
-	var posts []RecentPost
+func GetRecentPost() (posts []RecentPost) {
 	db.Table("posts").Select("id", "title", "update").Order("updated_at desc").Limit(10).Scan(&posts)
-	return posts
+	return
 }
 
 type PostRead struct {
@@ -61,34 +66,30 @@ type PostRead struct {
 	Count  int
 }
 
-//GetMostReadedPost 最多阅读量的十篇文章
-func GetMostReadedPost() []PostRead {
-	var posts []PostRead
-	db.Raw("select v.post_id ,p.title,p.update,count(v.post_id) from visitors v inner join posts p on p.id=v.post_id group by p.title, v.post_id order by count desc limit 10").Scan(&posts)
-	return posts
+//GetMostReadPost 最多阅读量的十篇文章
+func GetMostReadPost() (posts []PostRead) {
+	db.Raw("select v.post_id ,p.title,p.update,count(v.post_id) from visitors v inner join posts p on p.id=v.post_id group by v.post_id ,p.title,p.update order by count desc limit 10").Scan(&posts)
+	return
 }
 
 type BrowserTable struct {
-	Name  string
-	Count int
+	Browser string
+	Count   int
 }
 
 //GetBrowsers 不同浏览器的访问量
-func GetBrowser() []BrowserTable {
-
-	var browsers []BrowserTable
+func GetBrowser() (browsers []BrowserTable) {
 	db.Table("visitors").Select("browser", "count(browser)").Group("browser").Order("count desc").Scan(&browsers)
-	return browsers
+	return
 }
 
 type OSTable struct {
-	Name  string
+	Os    string
 	Count int
 }
 
 //GetOS 不同设备访问量
-func GetOS() []OSTable {
-	var os []OSTable
+func GetOS() (os []OSTable) {
 	db.Table("visitors").Select("os", "count(os)").Group("os").Order("count desc").Scan(&os)
-	return os
+	return
 }
