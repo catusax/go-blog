@@ -19,6 +19,7 @@ export default class Title extends React.Component {
     }
     getdata = async () => {
         let resp = await request("/api/statistic/total")
+        if (resp != null)
         this.setState({
             Visitors: resp.Visitors,
             Posts: resp.Posts

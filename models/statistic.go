@@ -1,6 +1,7 @@
 package models
 
 import (
+	"blog/errors"
 	"github.com/ua-parser/uap-go/uaparser"
 	"gorm.io/gorm"
 )
@@ -21,7 +22,7 @@ type Visitor struct {
 }
 
 func (v *Visitor) Create() error {
-	return db.Create(&v).Error
+	return errors.Errorf(db.Create(&v).Error, "Database Create failed")
 }
 func (v *Visitor) SetUA(ua string) {
 	client := Parser.Parse(ua)
@@ -30,9 +31,9 @@ func (v *Visitor) SetUA(ua string) {
 }
 
 // GetTotalStatistic返回总PV和文章数
-func GetTotalStatistic() (totalvisitor int64, totalpost int64) {
-	db.Table("visitors").Count(&totalvisitor)
-	db.Table("posts").Count(&totalpost)
+func GetTotalStatistic() (totalVisitor int64, totalPost int64) {
+	db.Table("visitors").Count(&totalVisitor)
+	db.Table("posts").Count(&totalPost)
 	return
 }
 
@@ -42,8 +43,8 @@ type RecentVisitor struct {
 }
 
 //GetRecentVisit 获取最近一个月的访客数
-func GetRecentVisit() (visitor []RecentVisitor) {
-	db.Raw("select date(updated_at),count(date(updated_at)) from visitors where date_part('day',now()-updated_at)<=30 group by date order by date").Scan(&visitor)
+func GetRecentVisit() (visitor []RecentVisitor, err error) {
+	err = errors.Errorf(db.Raw("select date(updated_at),count(date(updated_at)) from visitors where deleted_at is null and date_part('day',now()-updated_at)<=30 group by date order by date").Scan(&visitor).Error, "Database query failed")
 	return
 }
 
@@ -54,8 +55,8 @@ type RecentPost struct {
 }
 
 //GetRecentPost 最近更新的十篇文章
-func GetRecentPost() (posts []RecentPost) {
-	db.Table("posts").Select("id", "title", "update").Order("updated_at desc").Limit(10).Scan(&posts)
+func GetRecentPost() (posts []RecentPost, err error) {
+	err = errors.Errorf(db.Table("posts").Select("id", "title", "update").Order("updated_at desc").Limit(10).Scan(&posts).Error, "Database query failed")
 	return
 }
 
@@ -67,8 +68,8 @@ type PostRead struct {
 }
 
 //GetMostReadPost 最多阅读量的十篇文章
-func GetMostReadPost() (posts []PostRead) {
-	db.Raw("select v.post_id ,p.title,p.update,count(v.post_id) from visitors v inner join posts p on p.id=v.post_id group by v.post_id ,p.title,p.update order by count desc limit 10").Scan(&posts)
+func GetMostReadPost() (posts []PostRead, err error) {
+	err = errors.Errorf(db.Raw("select v.post_id ,p.title,p.update,count(v.post_id) from visitors v inner join posts p on p.id=v.post_id where p.deleted_at IS NULL group by v.post_id ,p.title,p.update order by count desc limit 10").Scan(&posts).Error, "Database query failed")
 	return
 }
 
@@ -78,8 +79,8 @@ type BrowserTable struct {
 }
 
 //GetBrowsers 不同浏览器的访问量
-func GetBrowser() (browsers []BrowserTable) {
-	db.Table("visitors").Select("browser", "count(browser)").Group("browser").Order("count desc").Scan(&browsers)
+func GetBrowser() (browsers []BrowserTable, err error) {
+	err = errors.Errorf(db.Table("visitors").Select("browser", "count(browser)").Group("browser").Order("count desc").Scan(&browsers).Error, "Database query failed")
 	return
 }
 
@@ -89,7 +90,7 @@ type OSTable struct {
 }
 
 //GetOS 不同设备访问量
-func GetOS() (os []OSTable) {
-	db.Table("visitors").Select("os", "count(os)").Group("os").Order("count desc").Scan(&os)
+func GetOS() (os []OSTable, err error) {
+	err = errors.Errorf(db.Table("visitors").Select("os", "count(os)").Group("os").Order("count desc").Scan(&os).Error, "Database query failed")
 	return
 }

@@ -12,7 +12,7 @@ class Archive extends React.Component<any> {
     tag: this.props.match.params.name,
     pagination: {
       current: this.props.match.params.page || 1,
-      pagesize: 10,
+      pageSize: 10,
       total: 0,
     },
     data: [{
@@ -27,7 +27,7 @@ class Archive extends React.Component<any> {
       method: "get",
       params: {
         page: page || this.props.match.params.page,
-        pagesize: this.state.pagination.pagesize,
+        pageSize: this.state.pagination.pageSize,
         tag: this.state.tag
       },
     })
@@ -39,7 +39,7 @@ class Archive extends React.Component<any> {
       data: data.posts,
       pagination: {
         current: this.state.pagination.current,
-        pagesize: this.state.pagination.pagesize,
+        pageSize: this.state.pagination.pageSize,
         total: data.total,
       }
     })
@@ -73,7 +73,7 @@ class Archive extends React.Component<any> {
           {elements}
         </div>
       </section>
-        <Pagination current={this.state.pagination.current} pagesize={this.state.pagination.pagesize} total={this.state.pagination.total} onChange={this.paginationhandle.bind(this)} /></>
+        <Pagination current={this.state.pagination.current} pageSize={this.state.pagination.pageSize} total={this.state.pagination.total} onChange={this.paginationhandle.bind(this)} /></>
     );
   }
 }

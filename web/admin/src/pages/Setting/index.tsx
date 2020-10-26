@@ -4,7 +4,7 @@ import style from './index.less';
 import UploadForm from './components/uploadform'
 import SettingForm from './components/settingform'
 import { Col, Card } from 'antd';
-import { FormattedDisplayName } from 'umi';
+import Import from './components/importposts'
 
 export default () => {
   return (
@@ -17,6 +17,7 @@ export default () => {
           </Col>
           <Col flex="10%">
             <UploadForm />
+            <Import/>
           </Col>
         </div>
         <div style={{ paddingTop: 100, textAlign: 'center' }}>

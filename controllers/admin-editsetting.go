@@ -8,64 +8,51 @@ import (
 	"net/http"
 )
 
-//UploadFavicon
+// UploadFavicon
 func UploadFavicon(c *gin.Context) {
 	file, err := c.FormFile("favicon")
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"status": "error",
-			"msg":    err.Error(),
-		})
+		returnError(err, c)
+		return
 	}
-	err = c.SaveUploadedFile(file, "./static/favicon.ico")
-	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"status": "error",
-			"msg":    err.Error(),
-		})
+	if err := c.SaveUploadedFile(file, "./static/favicon.ico"); err != nil {
+		returnError(err, c)
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",
 	})
 }
 
-//UploadAvatar
+// UploadAvatar
 func UploadAvatar(c *gin.Context) {
 	file, err := c.FormFile("avatar")
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"status": "error",
-			"msg":    err.Error(),
-		})
+		returnError(err, c)
+		return
 	}
-	err = c.SaveUploadedFile(file, "./static/avatar.png")
-	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"status": "error",
-			"msg":    err.Error(),
-		})
+	if err := c.SaveUploadedFile(file, "./static/avatar.png"); err != nil {
+		returnError(err, c)
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",
 	})
 }
 
-//ChangeConfig
+// ChangeConfig
 func ChangeConfig(c *gin.Context) {
 	data, _ := ioutil.ReadAll(c.Request.Body)
-	err := utils.WriteConf(data)
-	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"status": "error",
-			"msg":    err.Error(),
-		})
+	if err := utils.WriteConf(data); err != nil {
+		returnError(err, c)
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",
 	})
 }
 
-//GetConfig
+// GetConfig
 func GetConfig(c *gin.Context) {
 	c.JSON(http.StatusOK, viper.AllSettings())
 }

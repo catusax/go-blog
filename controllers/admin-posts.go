@@ -1,31 +1,30 @@
 package controllers
 
 import (
+	"blog/errors"
 	"blog/models"
 	"blog/utils"
 	"io/ioutil"
-	"log"
+	"mime/multipart"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
-// posts.GET("/getlist", ctrs.GetPosts)
-// posts.POST("/import")
-// posts.POST("/new")
-// posts.PUT("/update")
-// posts.DELETE("/delete")
-
 //GetPosts 返回文章列表
 func GetPosts(c *gin.Context) {
 	page, _ := strconv.Atoi(c.Query("page"))
-	pagesize, err := strconv.Atoi(c.Query("pagesize"))
+	pageSize, err := strconv.Atoi(c.Query("pageSize"))
 	if err != nil {
-		pagesize = 10
+		pageSize = 10
 	}
 	word := c.Query("word")
-	posts, total := models.GetPostsList(page, pagesize, word)
+	posts, total, err := models.GetPostsList(page, pageSize, word)
+	if err != nil {
+		returnError(err, c)
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"posts": posts,
 		"page":  page,
@@ -35,67 +34,81 @@ func GetPosts(c *gin.Context) {
 
 //Import 导入hexo的MD文件
 func Import(c *gin.Context) {
-	file, _, _ := c.Request.FormFile("file")
-	fileBytes, err := ioutil.ReadAll(file) //读取内容
+	form, err := c.MultipartForm()
 	if err != nil {
-		log.Println(err)
+		returnError(err, c)
+		return
 	}
-	yaml, md := utils.MDCut(fileBytes)
-	var post models.Post
-	post.MDParse(md, yaml)
-	err = post.Save()
-	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"status": "error",
-			"msg":    err.Error(),
-		})
-	} else {
-		c.JSON(http.StatusOK, gin.H{
-			"status": "ok",
-			"msg":    "",
-		})
+	files := form.File["files"]
+	if err = importFile(&files); err != nil {
+		returnError(err, c)
+		return
 	}
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
+		"msg":    "",
+	})
+}
+
+func importFile(files *[]*multipart.FileHeader) error {
+	for _, fileHeader := range *files {
+		file, _ := fileHeader.Open()
+		fileBytes, _ := ioutil.ReadAll(file)
+		_ = file.Close()
+		yaml, md := utils.MDCut(utils.NormalizeLines(fileBytes))
+		var post models.Post
+		if err := post.MDParse(md, yaml); err != nil {
+			return errors.Errorf(err, "MDParse failed")
+		}
+		if post.Title == "" {
+			return errors.New("No title found")
+		}
+		if err := post.NoDuplicateSave(); err != nil {
+			return errors.Errorf(err, "%s", post.Title)
+		}
+	}
+	return nil
 }
 
 //New 用于新建一个post或者更新一个post
 func New(c *gin.Context) {
 	var post models.Post
-	c.ShouldBindJSON(&post) //原始文本+发布状态
+	if err := c.ShouldBindJSON(&post); err != nil {
+		returnError(err, c)
+	} //原始文本+发布状态
 	yaml, md := utils.MDCut([]byte(post.Content))
-	post.MDParse(md, yaml)
-	err := post.Save()
-	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"status": "error",
-			"msg":    err.Error(),
-		})
-	} else {
-		c.JSON(http.StatusOK, gin.H{
-			"status": "ok",
-			"msg":    "",
-		})
+	if err := post.MDParse(md, yaml); err != nil {
+		returnError(err, c)
 	}
+	if err := post.Save(); err != nil {
+		returnError(err, c)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
+		"msg":    "",
+	})
 }
 
 //Delete 删除post
 func Delete(c *gin.Context) {
-	type delete struct {
+	type d struct {
 		ID int
 	}
-	var id delete
-	c.ShouldBindJSON(&id)
-	err := models.DeletePost(id.ID)
-	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"status": "error",
-			"msg":    err.Error(),
-		})
-	} else {
-		c.JSON(http.StatusOK, gin.H{
-			"status": "ok",
-			"msg":    "",
-		})
+	var id d
+	if err := c.ShouldBindJSON(&id); err != nil {
+		returnError(err, c)
+		return
 	}
+	if err := models.DeletePost(id.ID); err != nil {
+		returnError(err, c)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
+		"msg":    "",
+	})
+
 }
 
 //ChangeStatus 更改文章状态
@@ -104,20 +117,22 @@ func ChangeStatus(c *gin.Context) {
 		ID      int
 		Publish bool
 	}
-	var reqjson submit
-	c.ShouldBindJSON(&reqjson)
-	post, err := models.GetPost(reqjson.ID)
-	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"status": "error",
-			"msg":    err.Error(),
-		})
-	} else {
-		post.Publish = reqjson.Publish
-		post.Save()
-		c.JSON(http.StatusOK, gin.H{
-			"status": "ok",
-			"msg":    "",
-		})
+	var reqJson submit
+	if err := c.ShouldBindJSON(&reqJson); err != nil {
+		returnError(err, c)
+		return
 	}
+	post, err := models.GetPost(reqJson.ID)
+	if err != nil {
+		returnError(err, c)
+	}
+	post.Publish = reqJson.Publish
+	if err := post.Save(); err != nil {
+		returnError(err, c)
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
+		"msg":    "",
+	})
+
 }

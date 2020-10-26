@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"blog/models"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -15,11 +14,15 @@ func Index(c *gin.Context) {
 	if err != nil {
 		page = 1
 	}
-	pagesize, err := strconv.Atoi(c.Query("pagesize"))
-	if err != nil && pagesize > 50 {
-		pagesize = 10
+	pageSize, err := strconv.Atoi(c.Query("pageSize"))
+	if err != nil && pageSize > 50 {
+		pageSize = 10
 	}
-	posts, total := models.GetPublishedPostList(page, pagesize)
+	posts, total, err := models.GetPublishedPostList(page, pageSize)
+	if err != nil {
+		_ = c.AbortWithError(404, err)
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"posts": posts,
 		"page":  page,
@@ -31,9 +34,14 @@ func Index(c *gin.Context) {
 func Post(c *gin.Context) {
 	page, err := strconv.Atoi(c.Query("page"))
 	if err != nil {
-		c.AbortWithStatus(404)
+		_ = c.AbortWithError(404, err)
+		return
 	}
-	post, _ := models.GetPost(page)
+	post, err := models.GetPost(page)
+	if err != nil {
+		_ = c.AbortWithError(404, err)
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"post": post,
 	})
@@ -45,13 +53,14 @@ func Archive(c *gin.Context) {
 	if err != nil {
 		page = 1
 	}
-	pagesize, err := strconv.Atoi(c.Query("pagesize"))
-	if err != nil && pagesize > 50 {
-		pagesize = 10
+	pageSize, err := strconv.Atoi(c.Query("pageSize"))
+	if err != nil && pageSize > 50 {
+		pageSize = 10
 	}
-	archives, total, err := models.GetPostByYear(page, pagesize)
+	archives, total, err := models.GetPostByYear(page, pageSize)
 	if err != nil {
-		log.Println(err)
+		_ = c.AbortWithError(404, err)
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -65,9 +74,14 @@ func Tag(c *gin.Context) {
 	tag := c.Query("tag")
 	if tag == "" {
 		c.AbortWithStatus(404)
+		return
 	}
 
-	posts, _ := models.GetPublishedPostsByTag(tag, 1, 10)
+	posts, _, err := models.GetPublishedPostsByTag(tag, 1, 10)
+	if err != nil {
+		_ = c.AbortWithError(404, err)
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"posts": posts,
 	})

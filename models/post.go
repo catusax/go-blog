@@ -6,7 +6,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/russross/blackfriday/v2"
+	"blog/errors"
+	"github.com/gomarkdown/markdown"
 	"github.com/spf13/viper"
 	"gorm.io/gorm/clause"
 )
@@ -14,40 +15,40 @@ import (
 // Post 包含了Tag
 type Post struct {
 	Article
-	Description string `gorm:"type:varchar(400)"`
+	Description string `gorm:"type:text"`
 	Publish     bool   `gorm:"default:false"`
 	Tags        []*Tag `gorm:"many2many:post_tags;"`
-	//Tags    []Tag  `gorm:"many2many:post_tags;"`
 }
 
 //GetPublishedPostList 根据索引获取一页十个文章列表和总文章数
-func GetPublishedPostList(page int, pagesize int) ([]Post, int64) {
+func GetPublishedPostList(page int, pageSize int) ([]Post, int64, error) {
 	var posts []Post
 	var total int64
-	db.Preload("Tags").Select("id", "title", "update", "description").Order("created_at desc").Limit(pagesize).Offset((page-1)*pagesize).Find(&posts, "publish = ?", true)
+	err := db.Preload("Tags").Select("id", "title", "update", "description").Order("created_at desc").Limit(pageSize).Offset((page-1)*pageSize).Find(&posts, "publish = ?", true).Error
 	db.Model(&Post{}).Where("publish = ?", true).Count(&total)
-	return posts, total
+	return posts, total, errors.Errorf(err, "Database query failed")
 }
 
 //GetPostsList 根据参数返回对应页面和关键词的文章以及总文章数
-func GetPostsList(page int, pagesize int, word string) ([]Post, int64) {
+func GetPostsList(page int, pageSize int, word string) ([]Post, int64, error) {
 	var posts []Post
 	var total int64
+	var err error
 	if word != "" {
-		db.Order("created_at desc").Limit(pagesize).Offset((page-1)*pagesize).Where("title like ?", "%"+word+"%").Find(&posts)
+		err = db.Order("created_at desc").Limit(pageSize).Offset((page-1)*pageSize).Where("title like ?", "%"+word+"%").Find(&posts).Error
 		db.Model(&Post{}).Where("title like ?", "%"+word+"%").Count(&total)
 	} else {
-		db.Preload(clause.Associations).Order("created_at desc").Limit(pagesize).Offset((page - 1) * pagesize).Find(&posts)
+		err = db.Preload(clause.Associations).Order("created_at desc").Limit(pageSize).Offset((page - 1) * pageSize).Find(&posts).Error
 		db.Model(&Post{}).Count(&total)
 	}
-	return posts, total
+	return posts, total, errors.Errorf(err, "Database failed")
 }
 
 //GetPost 根据主键获得一个post
 func GetPost(ID int) (Post, error) {
 	var post Post
 	err := db.Preload("Tags").First(&post, ID).Error
-	return post, err
+	return post, errors.Errorf(err, "Database query failed")
 }
 
 //Archive 以年份分类保存post
@@ -57,14 +58,15 @@ type Archive struct {
 }
 
 //GetPostByYear 按年份分类导出post
-func GetPostByYear(page int, pagesize int) ([]Archive, int64, error) {
+//goland:noinspection GoNilness
+func GetPostByYear(page int, pageSize int) ([]Archive, int64, error) {
 	var posts []Post
 	var archive []Archive
 	var total int64
 
-	err := db.Select("id", "title", "update", "created_at").Limit(pagesize).Offset((page-1)*pagesize).Where("publish = ?", true).Find(&posts).Error
+	err := db.Select("id", "title", "update", "created_at").Limit(pageSize).Offset((page-1)*pageSize).Where("publish = ?", true).Find(&posts).Error
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, errors.Errorf(err, "Database query failed")
 	}
 	db.Model(&Post{}).Count(&total)
 	year := 0 //上一年年份
@@ -82,51 +84,55 @@ func GetPostByYear(page int, pagesize int) ([]Archive, int64, error) {
 			archive[num].Posts = append(archive[num].Posts, post)
 		}
 	}
-	return archive, total, err
+	return archive, total, nil
 }
 
 //SetDescription 根据文章Content生成Description
 func (post *Post) setDescription() {
 	descMD := utils.GetDescription([]byte(post.Content))
 	if len(descMD) >= 5 {
-		post.Description = string(blackfriday.Run(descMD))
+		post.Description = string(markdown.ToHTML(descMD, nil, nil))
 	}
 }
 
 //MDParse 用于把hexo post解析成一个Post结构体
-func (post *Post) MDParse(md []byte, yaml []byte) {
-	viper.SetConfigType("yaml")
-	err := viper.ReadConfig(bytes.NewBuffer(yaml))
+func (post *Post) MDParse(md []byte, yaml []byte) error {
+	var viperMd = viper.New()
+	viperMd.SetConfigType("yaml")
+	err := viperMd.ReadConfig(bytes.NewBuffer(yaml))
 	if err != nil {
-		log.Println(err)
+		return errors.Errorf(err, "viper ReadConfig failed")
 	}
 
 	var tags []*Tag
-	for _, tag := range viper.GetStringSlice("tags") {
-		var dbtag Tag
-		if db.Where("name = ?", tag).First(&dbtag).Error == nil {
-			tags = append(tags, &dbtag)
+	for _, tag := range viperMd.GetStringSlice("tags") {
+		var dbTag Tag
+		if db.Where("name = ?", tag).First(&dbTag).Error == nil {
+			tags = append(tags, &dbTag)
 		} else {
 			tags = append(tags, &Tag{Name: tag})
 		}
 	}
 	post.Tags = tags
 
-	post.Title = viper.GetString("title")
-	if viper.GetString("date") != "" { //存在date字段说明是hexo源文件
-		gettime, _ := time.Parse("2006-01-02 15:04:05", viper.GetString("date"))
-		post.Update = gettime.Format("Jan 02,2006")
-		post.CreatedAt = gettime
+	post.Title = viperMd.GetString("title")
+	if date := viperMd.GetString("date"); date != "" { //存在date字段说明是hexo源文件
+		log.Println("Found Hexo post!date:", date)
+		getTime, _ := time.Parse("2006-01-02 15:04:05", date)
+		post.Update = getTime.Format("Jan 02,2006")
+		post.CreatedAt = getTime
+		post.UpdatedAt = getTime
 	} else {
 		post.Update = time.Now().Format("Jan 02,2006")
 	}
 	post.Content = string(md)
 	post.Yaml = string(yaml)
+	return nil
 }
 
 //DeletePost 根据id删除一个post
 func DeletePost(id int) error {
-	return db.Delete(&Post{}, id).Error
+	return errors.Errorf(db.Select("posts", "tags").Delete(&Post{}, id).Error, "Database delete failed")
 }
 
 //Save 保存或更新一个文章到数据库
@@ -136,11 +142,26 @@ func (post *Post) Save() error {
 	post.setDate()
 	var post2 Post
 	err := db.First(&post2, post.ID).Error
-	//err := db.Where("title = ?", article.Title).First(&existarticle)
 	//插入或更新
 	if err != nil { //不存在article，直接新建
-		return db.Create(&post).Error
+		return errors.Errorf(db.Create(&post).Error, "Database insert failed")
 	}
 	post.CreatedAt = post2.CreatedAt //防止更新后时间错乱
-	return db.Save(&post).Error
+	return errors.Errorf(db.Save(&post).Error, "Database update failed")
+}
+
+// NoDuplicateSave 保存文章时候保证标题不重复,用于从hexo导入文章
+func (post *Post) NoDuplicateSave() error {
+	post.setDescription()
+	post.setHTML()
+	post.Publish = true
+	log.Println(post.Title)
+	var p Post
+	if err := db.Where("title = ?", post.Title).First(&p).Error; err != nil {
+		if err := db.Create(&post).Error; err != nil {
+			return errors.Errorf(err, "Database insert failed")
+		}
+		return nil
+	}
+	return errors.New("duplicate title")
 }

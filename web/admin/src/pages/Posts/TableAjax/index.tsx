@@ -1,6 +1,6 @@
 import React from "react";
 import "./index.less";
-import { Table, Input, Popover, Divider } from "antd";
+import { Table, Input, Popover, Divider, Tag } from "antd";
 import request from '@/utils/request';
 import DeleteModal from "../components/deleteconfirm"
 import EditModal from "../components/edit"
@@ -33,7 +33,7 @@ class App extends React.Component {
       method: "GET",
       params: {
         page: pagination.current,
-        pagesize: pagination.pageSize,
+        pageSize: pagination.pageSize,
         word: this.state.keyword
       },
     }).then(data => {
@@ -41,7 +41,7 @@ class App extends React.Component {
         loading: false,
         data: data.posts,
         pagination: {
-          pagination,
+          ...pagination,
           total: data.total,
         }
       });
@@ -75,19 +75,13 @@ class App extends React.Component {
               {
                 title: "标题",
                 dataIndex: "Title",
-                //sorter: true,
-                //render: name => `${name.first} ${name.last}`,
-                width: "20%"
+                width: "20%",
+                render:(Title,record:any)=>{
+                  return(
+                  <a style={{color:"#333"}} href={"/post/"+record.ID}>{Title}</a>
+                  )
+                }
               },
-              // {
-              //   title: "Gender",
-              //   dataIndex: "gender",
-              //   filters: [
-              //     { text: "Male", value: "male" },
-              //     { text: "Female", value: "female" }
-              //   ],
-              //   width: "20%"
-              // },
               {
                 title: "创建日期",
                 dataIndex: "Update"
@@ -98,7 +92,7 @@ class App extends React.Component {
                 width: "20%",
                 render: (Description) =>{
                   const content =(
-                    <div dangerouslySetInnerHTML={{__html: Description}} ></div>
+                    <div style={{width:"500px",maxHeight:"400px"}} dangerouslySetInnerHTML={{__html: Description}} ></div>
                   )
                   return(
                     <Popover content={ content} title="Title">
@@ -106,6 +100,25 @@ class App extends React.Component {
                   </Popover>
                   )
                 }
+              },
+              {
+                title: "Tags",
+                dataIndex: "Tags",
+                width: "20%",
+                render:tags => (
+                  <>
+                    {tags.map((tag:any) => {
+                      let color = tag.Name.length > 3 ? 'gold' : 'green';
+                      color = tag.Name.length > 5 ? 'volcano' : color;
+                      color = tag.Name.length > 7 ? 'red' : color;
+                      return (
+                        <Tag color={color} key={tag}>
+                          {tag.Name}
+                        </Tag>
+                      );
+                    })}
+                  </>
+                ),
               },
               {
                 title: "状态",
@@ -126,11 +139,6 @@ class App extends React.Component {
                     <Divider type="vertical" />
                     <EditModal record={record} action={this.componentDidMount.bind(this)} />
                     </div>
-                    {/* <a onClick={showdelete}  >
-                    删除
-                  </a>
-                  <Divider type="vertical" />
-                  <a href="">删除2</a> */}
                   </>
                 ),
               }

@@ -12,7 +12,7 @@ class EditModal extends React.Component<any> {
     }
 
     state = {
-        contentmd: "---\n"+this.props.record.Yaml+"\n---\n"+this.props.record.Content,
+        contentmd: "---\n" + this.props.record.Yaml + "\n---\n" + this.props.record.Content,
         visible: false,
         confirmLoading: false,
     };
@@ -69,6 +69,7 @@ class EditModal extends React.Component<any> {
                     编辑
         </Button>
                 <Modal
+                    width="60%"
                     title="Title"
                     visible={visible}
                     onOk={this.handleOk}
@@ -76,10 +77,10 @@ class EditModal extends React.Component<any> {
                     onCancel={this.handleCancel}
                 >
                     <Editor
-                    style={{ height: "500px" }}
-                    value={contentmd}
-                    onChange={this.handleEditorChange}
-                    renderHTML={(text: string | undefined) => <ReactMarkdown source={text} />}
+                        style={{ height: "500px" }}
+                        value={contentmd}
+                        onChange={this.handleEditorChange}
+                        renderHTML={(text: string | undefined) => <ReactMarkdown source={text} />}
                     />
                 </Modal>
             </>

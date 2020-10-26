@@ -10,36 +10,37 @@ export default class Recentupdated extends React.Component {
     }
     state = {
         data: [{
-            Title:'',
-            Update:'',
-            PostID:0,
+            Title: '还没有文章呢',
+            Update: '',
+            PostID: 0,
         }]
     }
     getdata = async () => {
         let resp = await request("/api/statistic/recentpost")
-        this.setState({
-            data: resp
-        })
+        if (resp != null)
+            this.setState({
+                data: resp
+            })
     }
 
     render() {
         return (
-            <Card className={style.card} style={{overflowY:"scroll"}}
-            title="最近更新"
+            <Card className={style.card} style={{ overflowY: "scroll" }}
+                title="最近更新"
             >
-            <List
-                itemLayout="horizontal"
-                dataSource={this.state.data}
-                renderItem={item => (
-                    <List.Item>
-                        <List.Item.Meta
-                        title={<a href={"/posts/"+item.PostID}>{item.Title}</a>}
-                        description={"更新日期："+item.Update}
-                        />
-                        
-                    </List.Item>
-                )}
-            />
+                <List
+                    itemLayout="horizontal"
+                    dataSource={this.state.data}
+                    renderItem={item => (
+                        <List.Item>
+                            <List.Item.Meta
+                                title={<a href={"/posts/" + item.PostID}>{item.Title}</a>}
+                                description={"更新日期：" + item.Update}
+                            />
+
+                        </List.Item>
+                    )}
+                />
             </Card>
         )
     }

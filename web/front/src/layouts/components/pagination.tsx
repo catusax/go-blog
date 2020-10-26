@@ -4,7 +4,7 @@ import './pagination.css'
 interface prop {
     onChange: onchange
     current: number
-    pagesize: number
+    pageSize: number
     total: number
 }
 
@@ -18,7 +18,7 @@ class Pagination extends React.Component<prop>{
     }
     state = {
         current: this.props.current || 1,
-        pagesize: this.props.pagesize || 10,
+        pageSize: this.props.pageSize || 10,
         total: this.props.total
     }
 
@@ -26,15 +26,15 @@ class Pagination extends React.Component<prop>{
         if (this.props != prevprops)
             this.setState({
                 current: this.props.current,
-                pagesize: this.props.pagesize,
+                pageSize: this.props.pageSize,
                 total: this.props.total
             })
     }
 
     pagination(): any {
-        const { current, pagesize, total } = this.state;
+        const { current, pageSize, total } = this.state;
         let pages = []
-        let totalpage = Math.ceil(total / pagesize)
+        let totalpage = Math.ceil(total / pageSize)
 
         if (current > 1) { //有上一页
             pages.push(<a className="extend prev" onClick={() => {

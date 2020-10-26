@@ -11,3 +11,8 @@ func TestMDParse(t *testing.T) {
 	yaml, md := utils.MDCut(input)
 	fmt.Printf("%s\n%s\n", yaml, md)
 }
+
+func TestGetDescription(t *testing.T) {
+	descmd := utils.GetDescription([]byte("123123<!--more-->321321"))
+	fmt.Println(string(descmd))
+}

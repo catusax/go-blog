@@ -3,7 +3,7 @@ package models
 import (
 	"time"
 
-	"github.com/russross/blackfriday/v2"
+	"github.com/gomarkdown/markdown"
 	"gorm.io/gorm"
 )
 
@@ -19,7 +19,7 @@ type Article struct {
 
 //将MD转换为HTML
 func (article *Article) setHTML() {
-	article.HTML = string(blackfriday.Run([]byte(article.Content)))
+	article.HTML = string(markdown.ToHTML([]byte(article.Content), nil, nil))
 }
 
 func (article *Article) setDate() {

@@ -38,21 +38,41 @@ func TotalStatistic(c *gin.Context) {
 }
 
 func RecentPost(c *gin.Context) {
-	c.JSON(http.StatusOK, models.GetRecentPost())
+	data, err := models.GetRecentPost()
+	if err != nil {
+		_ = c.AbortWithError(404, err)
+	}
+	c.JSON(http.StatusOK, data)
 }
 
 func RecentVisit(c *gin.Context) {
-	c.JSON(http.StatusOK, models.GetRecentVisit())
+	data, err := models.GetRecentVisit()
+	if err != nil {
+		_ = c.AbortWithError(404, err)
+	}
+	c.JSON(http.StatusOK, data)
 }
 
 func MostRead(c *gin.Context) {
-	c.JSON(http.StatusOK, models.GetMostReadPost())
+	data, err := models.GetMostReadPost()
+	if err != nil {
+		_ = c.AbortWithError(404, err)
+	}
+	c.JSON(http.StatusOK, data)
 }
 
 func Browsers(c *gin.Context) {
-	c.JSON(http.StatusOK, models.GetBrowser())
+	data, err := models.GetBrowser()
+	if err != nil {
+		_ = c.AbortWithError(404, err)
+	}
+	c.JSON(http.StatusOK, data)
 }
 
 func OS(c *gin.Context) {
-	c.JSON(http.StatusOK, models.GetOS())
+	data, err := models.GetOS()
+	if err != nil {
+		_ = c.AbortWithError(404, err)
+	}
+	c.JSON(http.StatusOK, data)
 }

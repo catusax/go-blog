@@ -17,6 +17,7 @@ export default class Os extends React.Component {
     }
     getdata = async () => {
         let resp = await request("/api/statistic/os")
+        if (resp != null)
         this.setState({
             data: resp
         })

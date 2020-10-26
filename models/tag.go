@@ -1,23 +1,23 @@
 package models
 
 import (
+	"blog/errors"
 	"gorm.io/gorm"
-	"log"
 )
 
 //Tag 存储tags
 type Tag struct {
 	gorm.Model
-	Name  string  `gorm:"type:varchar(10);not null"`
+	Name  string  `gorm:"type:varchar(50);not null"`
 	Posts []*Post `gorm:"many2many:post_tags;"`
 }
 
 ////GetPostsByTag 获得tag对应的文章列表
-//func GetPostsByTag(name string, page int, pagesize int) ([]Post, int64) {
+//func GetPostsByTag(name string, page int, pageSize int) ([]Post, int64) {
 //	var tag Tag
 //	var posts []Post
 //	db.Where("name = ?", name).First(&tag)
-//	err := db.Model(&tag).Limit(pagesize).Offset((page - 1) * pagesize).Association("Posts").Find(&posts)
+//	err := db.Model(&tag).Limit(pageSize).Offset((page - 1) * pageSize).Association("Posts").Find(&posts)
 //	if err != nil {
 //		log.Println(err)
 //	}
@@ -26,17 +26,14 @@ type Tag struct {
 //}
 
 //GetPublishedPostsByTag 获得tag对应的文章列表
-func GetPublishedPostsByTag(name string, page int, pagesize int) ([]Post, int64) {
+func GetPublishedPostsByTag(name string, page int, pageSize int) ([]Post, int64, error) {
 	var tag Tag
 	var posts []Post
 	//db.Preload("Posts", "publish = ?", true).First(&tag, "name = ?", name)
 	db.Where("name = ?", name).First(&tag)
-	err := db.Model(&tag).Limit(pagesize).Offset((page-1)*pagesize).Where("publish = ?", true).Association("Posts").Find(&posts)
-	if err != nil {
-		log.Println(err)
-	}
+	err := db.Model(&tag).Limit(pageSize).Offset((page-1)*pageSize).Where("publish = ?", true).Association("Posts").Find(&posts)
 	total := db.Model(&tag).Where("publish = ?", true).Association("Posts").Count()
-	return posts, total
+	return posts, total, errors.Errorf(err, "Database query failed")
 }
 
 ////GetTagList 获取tag列表

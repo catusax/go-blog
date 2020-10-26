@@ -14,17 +14,19 @@ import (
 )
 
 //用用户名和密码加密数据
-var blockkey = sha256.Sum256([]byte(utils.C.User.Password))
-var s = securecookie.New([]byte(utils.C.User.Username), blockkey[:])
+var blockKey = sha256.Sum256([]byte(utils.C.User.Password))
+var s = securecookie.New([]byte(utils.C.User.Username), blockKey[:])
 
 //Login 用于处理登陆请求
 func Login(c *gin.Context) {
 
 	var user utils.User
-	//log.Println(c.Request)
-	c.ShouldBindJSON(&user)
-	log.Println(user)
-	if loginauth(user.Username, user.Password) {
+	if err := c.ShouldBindJSON(&user); err != nil {
+		returnError(err, c)
+		c.Abort()
+		return
+	}
+	if loginAuth(user.Username, user.Password) {
 		value := map[string]string{
 			"key": fmt.Sprintf("%d", time.Now().Unix()),
 		}
@@ -47,11 +49,11 @@ func Login(c *gin.Context) {
 			"currentAuthority": "admin",
 		})
 	} else {
-		//c.Redirect(http.StatusU, "/loginpage")
 		c.JSON(http.StatusUnauthorized, gin.H{
-			"status":  401,
+			"status":  "error",
 			"message": "用户名或密码错误",
 		})
+		c.Abort()
 	}
 }
 
@@ -59,7 +61,7 @@ func Login(c *gin.Context) {
 func AuthMiddleWare() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
-		rmcookie := &http.Cookie{
+		rmCookie := &http.Cookie{
 			Name:     "cookies",
 			Value:    "123456",
 			HttpOnly: true,
@@ -74,7 +76,7 @@ func AuthMiddleWare() gin.HandlerFunc {
 			err = s.Decode("cookies", cookie.Value, &value)
 			if err != nil {
 				log.Println("cookie decode error:", err) //解码失败说明cookies错误
-				http.SetCookie(c.Writer, rmcookie)       //清除cookie
+				http.SetCookie(c.Writer, rmCookie)       //清除cookie
 				c.JSON(http.StatusUnauthorized, gin.H{
 					"status":  401,
 					"message": "cookies已过期",
@@ -83,20 +85,20 @@ func AuthMiddleWare() gin.HandlerFunc {
 				return
 			}
 			//log.Println("date is:", value["key"])
-			cookietime, err := strconv.ParseInt(value["key"], 10, 64)
+			cookieTime, err := strconv.ParseInt(value["key"], 10, 64)
 			if err != nil {
 				log.Println(err)
 			}
 
-			if time.Now().Unix()-cookietime <= 2629743 { //cookies未过期
+			if time.Now().Unix()-cookieTime <= 2629743 { //cookies未过期
 				//log.Println("Auth passed!")
 				c.Next()
 				return
 			}
 		}
-		http.SetCookie(c.Writer, rmcookie) //清除cookie
+		http.SetCookie(c.Writer, rmCookie) //清除cookie
 		c.JSON(http.StatusUnauthorized, gin.H{
-			"status":  401,
+			"status":  "error",
 			"message": "cookies已过期",
 		})
 		c.Abort()
@@ -104,7 +106,7 @@ func AuthMiddleWare() gin.HandlerFunc {
 	}
 }
 
-func loginauth(name string, pass string) bool {
+func loginAuth(name string, pass string) bool {
 	if name == utils.C.User.Username && pass == utils.C.User.Password {
 		return true
 	}

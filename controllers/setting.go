@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-//Info
+// Info
 func Info(c *gin.Context) {
 	//time.Sleep(1 * time.Second) //测试
 	c.JSON(http.StatusOK, gin.H{

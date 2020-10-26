@@ -17,6 +17,7 @@ export default class Browsers extends React.Component {
     }
     getdata = async () => {
         let resp = await request("/api/statistic/browser")
+        if (resp != null)
         this.setState({
             data: resp
         })

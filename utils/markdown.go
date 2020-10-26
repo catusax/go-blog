@@ -21,7 +21,7 @@ func GetDescription(md []byte) []byte {
 	count := len(md)
 	for i := 0; i < count; i++ {
 		if md[i] == '<' && md[i+1] == '!' && md[i+2] == '-' && md[i+3] == '-' && md[i+4] == 'm' {
-			return md[:i-1] //返回<!--more-->标签前的内容作为摘要
+			return md[:i+11] //返回<!--more-->标签前的内容作为摘要
 		}
 	}
 	return nil
