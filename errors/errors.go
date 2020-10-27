@@ -1,3 +1,5 @@
+// https://github.com/hanjm/errors
+
 package errors
 
 import (
@@ -17,8 +19,7 @@ var defaultFilterFunc filterFunc = func(fileName string, funcName string) (filte
 	return strings.HasPrefix(fileName, "github.com")
 }
 
-// SetFilterFunc
-// if f return true, this caller frame will be excluded in error string, make tidy.
+// SetFilterFunc if f return true, this caller frame will be excluded in error string, make tidy.
 // default, it excluded github.com*
 func SetFilterFunc(f filterFunc) {
 	defaultFilterFunc = f
@@ -35,6 +36,7 @@ const (
 	formatPartSpace = ' '
 )
 
+// Err 错误信息
 type Err struct {
 	message  string
 	stdError error
@@ -146,8 +148,7 @@ func (e *Err) Inner() error {
 	return e.stdError
 }
 
-// As
-// 适配 GO1.13 errors.As errors.Is errors.Unwrap
+// As 适配 GO1.13 errors.As errors.Is errors.Unwrap
 func (e *Err) As(target interface{}) bool {
 	if e.stdError != nil {
 		return errors.As(e.stdError, target)
@@ -159,8 +160,7 @@ func (e *Err) As(target interface{}) bool {
 	return errors.As(errors.New(e.message), target)
 }
 
-// Is
-// 适配 GO1.13 errors.As errors.Is errors.Unwrap
+// Is 适配 GO1.13 errors.As errors.Is errors.Unwrap
 func (e *Err) Is(target error) bool {
 	if e.stdError != nil {
 		return errors.Is(e.stdError, target)
@@ -206,8 +206,7 @@ func Unwrap(err error) error {
 	return errors.Unwrap(err)
 }
 
-// Errorf
-//	用于包装上一步New/Errorf返回的error/*Err, 添加错误注释, 如 比"xx function error"更直接的错误说明、调用函数的参数值等
+// Errorf 用于包装上一步New/Errorf返回的error/*Err, 添加错误注释, 如 比"xx function error"更直接的错误说明、调用函数的参数值等
 // 			如果参数error类型不为*Err(error常量或自定义error类型或nil), 用于最早出错的地方, 会收集调用栈
 // 			如果参数error类型为*Err, 不会收集调用栈.
 //  上层调用方可以通过GetInnerMost得到里层/最里层被包装过的error常量
@@ -244,8 +243,7 @@ func newErr(msg string) *Err {
 	}
 }
 
-// GetInnerMost
-// 返回最早的被包装过的error常量
+// GetInnerMost 返回最早的被包装过的error常量
 func GetInnerMost(err error) error {
 	if err2, ok := err.(*Err); ok {
 		var innerMost error

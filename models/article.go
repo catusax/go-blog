@@ -4,9 +4,10 @@ import (
 	"blog/errors"
 	"blog/utils/md"
 	"bytes"
-	"github.com/spf13/viper"
 	"log"
 	"time"
+
+	"github.com/spf13/viper"
 
 	"github.com/gomarkdown/markdown"
 	"gorm.io/gorm"
@@ -22,6 +23,7 @@ type Article struct {
 	Yaml    string `gorm:"type:text"`
 }
 
+// Parse 解析Hexo格式的文件
 func (article *Article) Parse() error {
 	if err := article.hexoParse(md.Cut([]byte(article.Content))); err != nil {
 		return errors.Errorf(err, "Hexo Parse failed")

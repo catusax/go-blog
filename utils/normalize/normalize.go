@@ -2,6 +2,7 @@ package normalize
 
 import "bytes"
 
+// LinesToLF 把windows和mac的换行符格式统一转为unix格式
 func LinesToLF(b *[]byte) {
 	// Win -> Unix: replace CR LF with LF & remove BOM
 	*b = bytes.ReplaceAll(*b, []byte("\uFEFF"), []byte(""))

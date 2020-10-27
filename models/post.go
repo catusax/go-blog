@@ -3,10 +3,11 @@ package models
 import (
 	"blog/errors"
 	"blog/utils/md"
+	"strings"
+
 	"github.com/gomarkdown/markdown"
 	"github.com/spf13/viper"
 	"gorm.io/gorm/clause"
-	"strings"
 )
 
 // Post 包含了Tag
@@ -26,7 +27,7 @@ func GetPublishedPostList(page int, pageSize int) ([]Post, int64, error) {
 	return posts, total, errors.Errorf(err, "Database query failed")
 }
 
-//GetPublishedPostList 根据索引获取一页十个文章列表和总文章数
+// GetAllPublishedPost 根据索引获取一页十个文章列表和总文章数
 func GetAllPublishedPost() ([]Post, error) {
 	var posts []Post
 	//var total int64

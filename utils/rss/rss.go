@@ -3,10 +3,11 @@ package rss
 import (
 	"blog/errors"
 	"blog/models"
-	"github.com/gorilla/feeds"
-	"github.com/spf13/viper"
 	"io/ioutil"
 	"time"
+
+	"github.com/gorilla/feeds"
+	"github.com/spf13/viper"
 )
 
 func generateAtom() (string, error) {
@@ -39,6 +40,7 @@ func generateAtom() (string, error) {
 	return atom, nil
 }
 
+// WriteAtom 写入rss文件
 func WriteAtom(filename string) error {
 	var err error
 	atom, err := generateAtom()
