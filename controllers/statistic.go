@@ -2,10 +2,11 @@ package controllers
 
 import (
 	"blog/models"
-	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 //Visitor 记录访客信息
@@ -29,6 +30,7 @@ func Visitor() gin.HandlerFunc {
 	}
 }
 
+// TotalStatistic 总访客数和文章数统计
 func TotalStatistic(c *gin.Context) {
 	visitors, posts := models.GetTotalStatistic()
 	c.JSON(http.StatusOK, gin.H{
@@ -37,6 +39,7 @@ func TotalStatistic(c *gin.Context) {
 	})
 }
 
+// RecentPost 最近更新的文章
 func RecentPost(c *gin.Context) {
 	data, err := models.GetRecentPost()
 	if err != nil {
@@ -45,6 +48,7 @@ func RecentPost(c *gin.Context) {
 	c.JSON(http.StatusOK, data)
 }
 
+// RecentVisit 最近一个月访客
 func RecentVisit(c *gin.Context) {
 	data, err := models.GetRecentVisit()
 	if err != nil {
@@ -53,6 +57,7 @@ func RecentVisit(c *gin.Context) {
 	c.JSON(http.StatusOK, data)
 }
 
+// MostRead 最多阅读的十篇文章
 func MostRead(c *gin.Context) {
 	data, err := models.GetMostReadPost()
 	if err != nil {
@@ -61,6 +66,7 @@ func MostRead(c *gin.Context) {
 	c.JSON(http.StatusOK, data)
 }
 
+// Browsers 浏览器分析
 func Browsers(c *gin.Context) {
 	data, err := models.GetBrowser()
 	if err != nil {
@@ -69,6 +75,7 @@ func Browsers(c *gin.Context) {
 	c.JSON(http.StatusOK, data)
 }
 
+// OS 操作系统分析
 func OS(c *gin.Context) {
 	data, err := models.GetOS()
 	if err != nil {

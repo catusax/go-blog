@@ -2,13 +2,14 @@ package controllers
 
 import (
 	"blog/utils/config"
-	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
 )
 
-// UploadFavicon
+// UploadFavicon 上传favicon
 func UploadFavicon(c *gin.Context) {
 	file, err := c.FormFile("favicon")
 	if err != nil {
@@ -24,7 +25,7 @@ func UploadFavicon(c *gin.Context) {
 	})
 }
 
-// UploadAvatar
+// UploadAvatar 上传头像
 func UploadAvatar(c *gin.Context) {
 	file, err := c.FormFile("avatar")
 	if err != nil {
@@ -40,7 +41,7 @@ func UploadAvatar(c *gin.Context) {
 	})
 }
 
-// ChangeConfig
+// ChangeConfig 修改配置文件
 func ChangeConfig(c *gin.Context) {
 	data, _ := ioutil.ReadAll(c.Request.Body)
 	if err := config.WriteConf(data); err != nil {
@@ -52,7 +53,7 @@ func ChangeConfig(c *gin.Context) {
 	})
 }
 
-// GetConfig
+// GetConfig 获取配置文件
 func GetConfig(c *gin.Context) {
 	c.JSON(http.StatusOK, viper.AllSettings())
 }

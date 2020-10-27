@@ -126,17 +126,17 @@ func ChangeStatus(c *gin.Context) {
 		ID      int
 		Publish bool
 	}
-	var reqJson submit
-	if err := c.ShouldBindJSON(&reqJson); err != nil {
+	var reqJSON submit
+	if err := c.ShouldBindJSON(&reqJSON); err != nil {
 		returnError(err, c)
 		return
 	}
-	post, err := models.GetPost(reqJson.ID)
+	post, err := models.GetPost(reqJSON.ID)
 	if err != nil {
 		returnError(err, c)
 		return
 	}
-	post.Publish = reqJson.Publish
+	post.Publish = reqJSON.Publish
 	if err := post.Save(); err != nil {
 		returnError(err, c)
 		return

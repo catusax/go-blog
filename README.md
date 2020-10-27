@@ -1,3 +1,4 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/coolrc136/go-blog)](https://goreportcard.com/report/github.com/coolrc136/go-blog)
 ![GitHub](https://img.shields.io/github/license/coolrc136/go-blog)
 ![GitHub repo size](https://img.shields.io/github/repo-size/coolrc136/go-blog)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/coolrc136/go-blog)
