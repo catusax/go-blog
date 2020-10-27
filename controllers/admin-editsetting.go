@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"blog/utils"
+	"blog/utils/config"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"io/ioutil"
@@ -43,7 +43,7 @@ func UploadAvatar(c *gin.Context) {
 // ChangeConfig
 func ChangeConfig(c *gin.Context) {
 	data, _ := ioutil.ReadAll(c.Request.Body)
-	if err := utils.WriteConf(data); err != nil {
+	if err := config.WriteConf(data); err != nil {
 		returnError(err, c)
 		return
 	}

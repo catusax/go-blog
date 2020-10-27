@@ -1,7 +1,7 @@
-package utils
+package md
 
-//MDCut 用于拆分hexo post文件为MD和yaml配置两部分
-func MDCut(data []byte) ([]byte, []byte) {
+//Cut 用于拆分hexo post文件为MD和yaml配置两部分
+func Cut(data []byte) ([]byte, []byte) {
 	count := len(data)
 	for i := 0; i < count; i++ {
 		if data[i] == '-' && data[i+1] == '-' && data[i+2] == '-' {
@@ -29,9 +29,9 @@ func GetDescription(md []byte) []byte {
 
 // //MDParse 用于解析hexo post文件
 // func MDParse(file *multipart.FileHeader) ([]byte, []byte) {
-// 	openfile, _ := file.Open()
+// 	openFile, _ := file.Open()
 // 	var data []byte
-// 	count, err := openfile.Read(data)
+// 	count, err := openFile.Read(data)
 // 	for i = 0; i < count; i++ {
 // 		if data[i] == '-' && data[i+1] == '-' && data[i+2] == '-' {
 // 			return data[0 : i-1], data[i+3:]

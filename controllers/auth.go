@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"blog/utils"
+	"blog/utils/config"
 	"crypto/sha256"
 	"fmt"
 	"log"
@@ -14,13 +14,13 @@ import (
 )
 
 //用用户名和密码加密数据
-var blockKey = sha256.Sum256([]byte(utils.C.User.Password))
-var s = securecookie.New([]byte(utils.C.User.Username), blockKey[:])
+var blockKey = sha256.Sum256([]byte(config.C.User.Password))
+var s = securecookie.New([]byte(config.C.User.Username), blockKey[:])
 
 //Login 用于处理登陆请求
 func Login(c *gin.Context) {
 
-	var user utils.User
+	var user config.User
 	if err := c.ShouldBindJSON(&user); err != nil {
 		returnError(err, c)
 		c.Abort()
@@ -107,7 +107,7 @@ func AuthMiddleWare() gin.HandlerFunc {
 }
 
 func loginAuth(name string, pass string) bool {
-	if name == utils.C.User.Username && pass == utils.C.User.Password {
+	if name == config.C.User.Username && pass == config.C.User.Password {
 		return true
 	}
 

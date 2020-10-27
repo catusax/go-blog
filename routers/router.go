@@ -24,6 +24,8 @@ func loadRouters(router *gin.Engine) {
 	// 设置静态文件夹,仅用于测试，部署时请使用nginx or caddy
 	router.Static("/static", "./static")
 	router.StaticFile("/favicon.ico", "./static/favicon.ico")
+	router.StaticFile("/avatar.png", "./static/avatar.png")
+	router.StaticFile("/atom.xml", "./static/atom.xml")
 	router.StaticFile("/", "./web/front/dist/index.html")
 	router.StaticFile("/umi.css", "./web/front/dist/umi.css")
 	router.StaticFile("/umi.js", "./web/front/dist/umi.js")

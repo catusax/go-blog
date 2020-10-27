@@ -3,7 +3,8 @@ package controllers
 import (
 	"blog/errors"
 	"blog/models"
-	"blog/utils"
+	"blog/utils/normalize"
+	"blog/utils/rss"
 	"io/ioutil"
 	"mime/multipart"
 	"net/http"
@@ -44,6 +45,9 @@ func Import(c *gin.Context) {
 		returnError(err, c)
 		return
 	}
+	if err := rss.WriteAtom("static/atom.xml"); err != nil {
+		returnError(err, c)
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",
 		"msg":    "",
@@ -54,11 +58,12 @@ func importFile(files *[]*multipart.FileHeader) error {
 	for _, fileHeader := range *files {
 		file, _ := fileHeader.Open()
 		fileBytes, _ := ioutil.ReadAll(file)
+		normalize.LinesToLF(&fileBytes)
 		_ = file.Close()
-		yaml, md := utils.MDCut(utils.NormalizeLines(fileBytes))
 		var post models.Post
-		if err := post.MDParse(md, yaml); err != nil {
-			return errors.Errorf(err, "MDParse failed")
+		post.Content = string(fileBytes)
+		if err := post.Parse(); err != nil {
+			return errors.Errorf(err, "Parse failed")
 		}
 		if post.Title == "" {
 			return errors.New("No title found")
@@ -75,14 +80,18 @@ func New(c *gin.Context) {
 	var post models.Post
 	if err := c.ShouldBindJSON(&post); err != nil {
 		returnError(err, c)
+		return
 	} //原始文本+发布状态
-	yaml, md := utils.MDCut([]byte(post.Content))
-	if err := post.MDParse(md, yaml); err != nil {
+	if err := post.Parse(); err != nil {
 		returnError(err, c)
+		return
 	}
 	if err := post.Save(); err != nil {
 		returnError(err, c)
 		return
+	}
+	if err := rss.WriteAtom("static/atom.xml"); err != nil {
+		returnError(err, c)
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",
@@ -125,10 +134,12 @@ func ChangeStatus(c *gin.Context) {
 	post, err := models.GetPost(reqJson.ID)
 	if err != nil {
 		returnError(err, c)
+		return
 	}
 	post.Publish = reqJson.Publish
 	if err := post.Save(); err != nil {
 		returnError(err, c)
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",

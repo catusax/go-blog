@@ -1,13 +1,12 @@
 package main
 
 import (
+	"blog/utils/config"
 	"io"
 	"os"
 	"strconv"
 
 	"blog/routers"
-	"blog/utils"
-
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -21,14 +20,14 @@ func main() {
 	gin.DefaultWriter = io.Writer(os.Stdout)
 	// 使用日志中间件
 	r.Use(gin.Logger())
-	//cors
-	corsconf := cors.DefaultConfig()
-	corsconf.AllowCredentials = true
-	corsconf.AllowOrigins = []string{"http://localhost:8000", "http://localhost:8001", "http://127.0.0.1", "http://blog.coolrc.me"}
-	corsconf.AllowHeaders = []string{"x-requested-with", "content-type"}
+	// cors
+	corsConf := cors.DefaultConfig()
+	corsConf.AllowCredentials = true
+	corsConf.AllowOrigins = []string{"http://localhost:8000", "http://localhost:8001", "http://127.0.0.1", "http://blog.coolrc.me"}
+	corsConf.AllowHeaders = []string{"x-requested-with", "content-type"}
 
-	r.Use(cors.New(corsconf))
+	r.Use(cors.New(corsConf))
 	// 加载路由
 	routers.LoadRouters(r)
-	r.Run(":" + strconv.Itoa(utils.C.Port))
+	r.Run(":" + strconv.Itoa(config.C.Port))
 }

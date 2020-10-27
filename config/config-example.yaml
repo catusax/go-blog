@@ -20,3 +20,8 @@ disqus:
     sitename: qwe
 sitename: helloworld
 github: ""
+author:
+    name: coolrc
+    email: root@coolrc.me
+host: 'https://coolrc.me'
+description: ''

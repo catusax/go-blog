@@ -1,15 +1,12 @@
 package models
 
 import (
-	"blog/utils"
-	"bytes"
-	"log"
-	"time"
-
 	"blog/errors"
+	"blog/utils/md"
 	"github.com/gomarkdown/markdown"
 	"github.com/spf13/viper"
 	"gorm.io/gorm/clause"
+	"strings"
 )
 
 // Post 包含了Tag
@@ -27,6 +24,15 @@ func GetPublishedPostList(page int, pageSize int) ([]Post, int64, error) {
 	err := db.Preload("Tags").Select("id", "title", "update", "description").Order("created_at desc").Limit(pageSize).Offset((page-1)*pageSize).Find(&posts, "publish = ?", true).Error
 	db.Model(&Post{}).Where("publish = ?", true).Count(&total)
 	return posts, total, errors.Errorf(err, "Database query failed")
+}
+
+//GetPublishedPostList 根据索引获取一页十个文章列表和总文章数
+func GetAllPublishedPost() ([]Post, error) {
+	var posts []Post
+	//var total int64
+	err := db.Preload("Tags").Select("id", "title", "update", "description").Order("created_at desc").Find(&posts, "publish = ?", true).Error
+	//db.Model(&Post{}).Where("publish = ?", true).Count(&total)
+	return posts, errors.Errorf(err, "Database query failed")
 }
 
 //GetPostsList 根据参数返回对应页面和关键词的文章以及总文章数
@@ -89,23 +95,23 @@ func GetPostByYear(page int, pageSize int) ([]Archive, int64, error) {
 
 //SetDescription 根据文章Content生成Description
 func (post *Post) setDescription() {
-	descMD := utils.GetDescription([]byte(post.Content))
+	descMD := md.GetDescription([]byte(post.Content))
 	if len(descMD) >= 5 {
 		post.Description = string(markdown.ToHTML(descMD, nil, nil))
 	}
 }
 
 //MDParse 用于把hexo post解析成一个Post结构体
-func (post *Post) MDParse(md []byte, yaml []byte) error {
-	var viperMd = viper.New()
-	viperMd.SetConfigType("yaml")
-	err := viperMd.ReadConfig(bytes.NewBuffer(yaml))
+func (post *Post) setTags() error {
+	var viperTags = viper.New()
+	viperTags.SetConfigType("yaml")
+	err := viperTags.ReadConfig(strings.NewReader(post.Yaml))
 	if err != nil {
 		return errors.Errorf(err, "viper ReadConfig failed")
 	}
 
 	var tags []*Tag
-	for _, tag := range viperMd.GetStringSlice("tags") {
+	for _, tag := range viperTags.GetStringSlice("tags") {
 		var dbTag Tag
 		if db.Where("name = ?", tag).First(&dbTag).Error == nil {
 			tags = append(tags, &dbTag)
@@ -114,19 +120,6 @@ func (post *Post) MDParse(md []byte, yaml []byte) error {
 		}
 	}
 	post.Tags = tags
-
-	post.Title = viperMd.GetString("title")
-	if date := viperMd.GetString("date"); date != "" { //存在date字段说明是hexo源文件
-		log.Println("Found Hexo post!date:", date)
-		getTime, _ := time.Parse("2006-01-02 15:04:05", date)
-		post.Update = getTime.Format("Jan 02,2006")
-		post.CreatedAt = getTime
-		post.UpdatedAt = getTime
-	} else {
-		post.Update = time.Now().Format("Jan 02,2006")
-	}
-	post.Content = string(md)
-	post.Yaml = string(yaml)
 	return nil
 }
 
@@ -137,6 +130,7 @@ func DeletePost(id int) error {
 
 //Save 保存或更新一个文章到数据库
 func (post *Post) Save() error {
+	_ = post.setTags()
 	post.setDescription()
 	post.setHTML()
 	post.setDate()
@@ -152,10 +146,10 @@ func (post *Post) Save() error {
 
 // NoDuplicateSave 保存文章时候保证标题不重复,用于从hexo导入文章
 func (post *Post) NoDuplicateSave() error {
+	_ = post.setTags()
 	post.setDescription()
 	post.setHTML()
 	post.Publish = true
-	log.Println(post.Title)
 	var p Post
 	if err := db.Where("title = ?", post.Title).First(&p).Error; err != nil {
 		if err := db.Create(&post).Error; err != nil {
