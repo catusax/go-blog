@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  caddy:
+    image: caddy:alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./www:/srv
+
+  blog:
+    image: coolrc/blog
+    restart: unless-stopped
+    volumes:
+      - ./www:/blog/www
+      - ./config:/blog/config
+
+  db:
+    image: postgres:alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: root
+      POSTGRES_DB: blog

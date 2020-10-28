@@ -1,0 +1,21 @@
+http://coolrc.top/api/* {
+	file_server
+	reverse_proxy /api/* blog:8080
+}
+
+http://coolrc.top {
+	file_server
+	root /* /srv
+	try_files {path} /index.html
+}
+
+http://coolrc.top/admin {
+	file_server
+	root /* /srv
+	try_files {path} /admin/index.html
+}
+
+http://coolrc.top/static/* {
+	file_server
+	root /* /srv
+}

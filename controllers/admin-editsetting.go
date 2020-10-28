@@ -16,7 +16,7 @@ func UploadFavicon(c *gin.Context) {
 		returnError(err, c)
 		return
 	}
-	if err := c.SaveUploadedFile(file, "./static/favicon.ico"); err != nil {
+	if err := c.SaveUploadedFile(file, "./www/favicon.ico"); err != nil {
 		returnError(err, c)
 		return
 	}
@@ -32,7 +32,7 @@ func UploadAvatar(c *gin.Context) {
 		returnError(err, c)
 		return
 	}
-	if err := c.SaveUploadedFile(file, "./static/avatar.png"); err != nil {
+	if err := c.SaveUploadedFile(file, "./www/avatar.png"); err != nil {
 		returnError(err, c)
 		return
 	}
