@@ -4,6 +4,7 @@ import defaultSettings from './defaultSettings'; //import proxy from './proxy';
 
 const baseurl = '/admin/';
 export default defineConfig({
+  outputPath:'dist'+baseurl,
   hash: true,
   antd: {},
   dva: {
@@ -42,7 +43,7 @@ export default defineConfig({
         {
           path: '/',
           component: '../layouts/BasicLayout',
-          authority: ['admin', 'user'],
+          // authority: ['admin', 'user'],
           routes: [
             {
               path: '/',

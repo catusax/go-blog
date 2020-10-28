@@ -18,8 +18,9 @@ react + golang 前后端分离的博客
 
 ### 使用
 
-1. 安装postgresql，并新建一个数据库
+1. 安装`postgresql`，并新建一个数据库
 2. 修改`config/config.yaml`配置文件
+3. 使用`generate.sh`生成二进制文件、html、Caddyfile
 3. 在NGINX或caddy上配置静态文件目录和反代
 
 #### Markdown格式

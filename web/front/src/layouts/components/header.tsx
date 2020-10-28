@@ -70,7 +70,7 @@ class Header extends React.Component<{ siteinfo: siteinfo }> {
                     }} >BLOG</NavLink></li>
                     <li className="nav-list-item"><NavLink activeClassName="active" className="nav-list-link" to="/archives">ARCHIVE</NavLink></li>
                     {elements}
-                    <li className="nav-list-item"><a className="nav-list-link" href="/atom.xml" target="_self">RSS</a></li>
+                    <li className="nav-list-item"><a className="nav-list-link" href="/static/atom.xml" target="_self">RSS</a></li>
                 </ul>
             </header>
         )
