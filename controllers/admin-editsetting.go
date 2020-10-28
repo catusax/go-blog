@@ -48,6 +48,7 @@ func ChangeConfig(c *gin.Context) {
 		returnError(err, c)
 		return
 	}
+	config.ReadConfig()
 	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",
 	})

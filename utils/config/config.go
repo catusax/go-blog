@@ -2,9 +2,8 @@ package config
 
 import (
 	"encoding/json"
-	"log"
-
 	"github.com/spf13/viper"
+	"log"
 )
 
 //Config 配置文件
@@ -34,6 +33,11 @@ type User struct {
 var C Config
 
 func init() {
+	ReadConfig()
+}
+
+// ReadConfig 读取配置文件
+func ReadConfig(){
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.SetConfigFile("./config/config.yaml")
@@ -45,7 +49,6 @@ func init() {
 	if err != nil {
 		log.Fatal("解析配置文件失败：", err)
 	}
-
 }
 
 //WriteConf 将更改后的配置写入配置文件
@@ -59,7 +62,7 @@ func WriteConf(data []byte) error {
 	for k, v := range config {
 		viper.Set(k, v)
 	}
-	viper.Unmarshal(&C)
-	viper.WriteConfig()
+	_ = viper.Unmarshal(&C)
+	_ = viper.WriteConfig()
 	return nil
 }
