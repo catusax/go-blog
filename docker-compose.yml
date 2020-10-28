@@ -25,3 +25,6 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: root
       POSTGRES_DB: blog
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - /root/pgdata:/var/lib/postgresql/data/pgdata

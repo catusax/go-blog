@@ -24,7 +24,7 @@ class Header extends React.Component<{ siteinfo: siteinfo }> {
     }
 
     componentDidUpdate(prevprops: any) {
-        if (!prevprops.siteinfo)
+        if (!prevprops.siteinfo && this.props.siteinfo)
             this.setState({
                 Github: this.props.siteinfo.Github
             })
@@ -62,7 +62,7 @@ class Header extends React.Component<{ siteinfo: siteinfo }> {
 
         return (
             <header>
-                <a className="logo-link" href="/"><img src="/static/avatar.png"></img></a>
+                <a className="logo-link" href="/"><img src="/avatar.png"></img></a>
                 <ul className="nav nav-list">
                     <li className="nav-list-item"><NavLink activeClassName="active" className="nav-list-link" to="/" isActive={(_, location) => {
                         if (location.pathname != '/' && location.pathname.search("^/page/")) return false
@@ -70,7 +70,7 @@ class Header extends React.Component<{ siteinfo: siteinfo }> {
                     }} >BLOG</NavLink></li>
                     <li className="nav-list-item"><NavLink activeClassName="active" className="nav-list-link" to="/archives">ARCHIVE</NavLink></li>
                     {elements}
-                    <li className="nav-list-item"><a className="nav-list-link" href="/static/atom.xml" target="_self">RSS</a></li>
+                    <li className="nav-list-item"><a className="nav-list-link" href="/atom.xml" target="_self">RSS</a></li>
                 </ul>
             </header>
         )

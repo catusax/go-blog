@@ -36,12 +36,13 @@ func Login(c *gin.Context) {
 		}
 
 		cookie := &http.Cookie{
-			Name:     "cookies",
-			Value:    encoded,
-			HttpOnly: true,
+			Name:  "cookies",
+			Value: encoded,
+			//HttpOnly: true,
 			MaxAge:   2629743,
-			Secure:   true,
-			Path:     "/",
+			SameSite: http.SameSiteStrictMode,
+			//Secure:   true,
+			Path: "/",
 		}
 		http.SetCookie(c.Writer, cookie)
 		c.JSON(http.StatusOK, gin.H{

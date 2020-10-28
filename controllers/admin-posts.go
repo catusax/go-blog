@@ -45,7 +45,7 @@ func Import(c *gin.Context) {
 		returnError(err, c)
 		return
 	}
-	if err := rss.WriteAtom("static/atom.xml"); err != nil {
+	if err := rss.WriteAtom("www/atom.xml"); err != nil {
 		returnError(err, c)
 	}
 	c.JSON(http.StatusOK, gin.H{
@@ -90,7 +90,7 @@ func New(c *gin.Context) {
 		returnError(err, c)
 		return
 	}
-	if err := rss.WriteAtom("static/atom.xml"); err != nil {
+	if err := rss.WriteAtom("www/atom.xml"); err != nil {
 		returnError(err, c)
 	}
 	c.JSON(http.StatusOK, gin.H{
@@ -140,6 +140,9 @@ func ChangeStatus(c *gin.Context) {
 	if err := post.Save(); err != nil {
 		returnError(err, c)
 		return
+	}
+	if err := rss.WriteAtom("www/atom.xml"); err != nil {
+		returnError(err, c)
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",

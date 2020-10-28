@@ -9,7 +9,7 @@ http://coolrc.top {
 	try_files {path} /index.html
 }
 
-http://coolrc.top/admin {
+http://coolrc.top/admin* {
 	file_server
 	root /* /srv
 	try_files {path} /admin/index.html
