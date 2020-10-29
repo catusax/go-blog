@@ -1,21 +1,36 @@
-http://coolrc.top/api/* {
+{
+    email qq1782536964@live.com
+}
+https://coolrc.top/api/* {
+    tls {
+        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+    }
 	file_server
 	reverse_proxy /api/* blog:8080
 }
 
-http://coolrc.top {
+https://coolrc.top {
+    tls {
+            dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+    }
 	file_server
 	root /* /srv
 	try_files {path} /index.html
 }
 
-http://coolrc.top/admin* {
+https://coolrc.top/admin* {
+    tls {
+            dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+    }
 	file_server
 	root /* /srv
 	try_files {path} /admin/index.html
 }
 
-http://coolrc.top/static/* {
+https://coolrc.top/static/* {
+    tls {
+            dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+    }
 	file_server
 	root /* /srv
 }
