@@ -3,7 +3,7 @@ import request from '@/utils/request';
 import Comment from '../components/disqus'
 import '../post/post.css'
 
-class Archive extends React.Component<any> {
+export default class extends React.Component<any> {
   constructor(props: any) {
     super(props)
     this.getdata()
@@ -70,5 +70,3 @@ class Archive extends React.Component<any> {
     );
   }
 }
-
-export default Archive

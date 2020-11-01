@@ -4,7 +4,7 @@ import request from '@/utils/request';
 import { Link } from 'umi';
 import Comment from '../components/disqus'
 
-class Archive extends React.Component<any> {
+export default class extends React.Component<any> {
   constructor(props: any) {
     super(props)
     this.getdata()
@@ -81,5 +81,3 @@ class Archive extends React.Component<any> {
     );
   }
 }
-
-export default Archive
