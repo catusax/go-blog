@@ -18,3 +18,5 @@ static/*.png
 static/*.ico
 /static/*.xml
 www
+.idea
+*~

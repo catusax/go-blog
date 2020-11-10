@@ -14,7 +14,7 @@ https://coolrc.top {
             dns cloudflare {env.CLOUDFLARE_API_TOKEN}
     }
 	file_server
-	root /* /srv
+	root /* /srv/blog
 	try_files {path} /index.html
 }
 

@@ -10,11 +10,11 @@ import (
 // LoadRouters 初始化router
 func LoadRouters(router *gin.Engine) {
 	loadRouters(router)
+	loadStatic(router)
 }
 
-//nolint:funlen
+// nolint:funlen
 func loadRouters(router *gin.Engine) {
-
 	router.GET("/status", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"status": "ok",

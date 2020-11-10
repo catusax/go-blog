@@ -7,7 +7,8 @@ yarn
 yarn build
 cd ../../
 mkdir ./www
-cp -r ./web/front/dist/* ./www
+mkdir ./www/blog
+cp -r ./web/front/dist/* ./www/blog
 cp -r ./web/admin/dist/* ./www
 cp -r ./static ./www
 cp ./static/*.* ./www
