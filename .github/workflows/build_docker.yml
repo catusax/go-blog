@@ -3,7 +3,7 @@ name: docker
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
 
 jobs:
   docker:
@@ -29,6 +29,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: dockerfile\blog\Dockerfile
+          file: dockerfile/blog/Dockerfile
           push: true
           tags: coolrc/blog:latest
