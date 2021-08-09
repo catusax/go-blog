@@ -3,6 +3,7 @@ package main
 import (
 	"blog/utils/config"
 	"io"
+	"log"
 	"os"
 	"strconv"
 
@@ -29,5 +30,9 @@ func main() {
 	r.Use(cors.New(corsConf))
 	// 加载路由
 	routers.LoadRouters(r)
-	r.Run(":" + strconv.Itoa(config.C.Port))
+	log.Println("Starting server on :",config.C.Port)
+	err := r.Run(":" + strconv.Itoa(config.C.Port))
+	if err != nil {
+		log.Panic("err:",err)
+	}
 }
