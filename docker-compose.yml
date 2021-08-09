@@ -18,7 +18,9 @@ services:
       - ./.caddy/config/:/config
 
   blog:
-    image: coolrc/blog
+    build:
+      context: .
+      dockerfile: ./dockerfile/blog/Dockerfile
     restart: unless-stopped
     volumes:
       - ./www:/blog/www

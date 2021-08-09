@@ -1,14 +1,13 @@
 FROM golang:alpine as builder
 
-RUN apk --no-cache add git \
-        && cd / \
-        && git clone https://github.com/coolrc136/go-blog.git \
-        && cd go-blog \
-        && CGO_ENABLED=0 GOOS=linux go build
+WORKDIR /go-blog/
+COPY . .
+RUN CGO_ENABLED=0  GOPROXY=https://goproxy.io,direct GOOS=linux go build
 
 FROM alpine
 
-COPY --from=0 /go-blog/blog /blog/
-COPY --from=0 /go-blog/static /blog/static
-COPY --from=0 /go-blog/config /blog/config
-CMD cd /blog && ./blog
+WORKDIR /blog/
+COPY --from=0 /go-blog/blog .
+COPY static ./static
+COPY config ./config
+ENTRYPOINT /blog/blog
