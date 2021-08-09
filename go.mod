@@ -3,24 +3,18 @@ module blog
 go 1.13
 
 require (
-	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/gin-contrib/cors v1.3.1
-	github.com/gin-gonic/gin v1.6.3
-	github.com/gomarkdown/markdown v0.0.0-20200824053859-8c8b3816f167
+	github.com/gin-gonic/gin v1.7.3
+	github.com/go-playground/validator/v10 v10.9.0 // indirect
+	github.com/gomarkdown/markdown v0.0.0-20210514010506-3b9f47219fe7
 	github.com/gorilla/feeds v1.1.1
 	github.com/gorilla/securecookie v1.1.1
-	github.com/magiconair/properties v1.8.4 // indirect
-	github.com/mitchellh/mapstructure v1.3.3 // indirect
-	github.com/pelletier/go-toml v1.8.1 // indirect
-	github.com/spf13/afero v1.4.1 // indirect
-	github.com/spf13/cast v1.3.1 // indirect
-	github.com/spf13/jwalterweatherman v1.1.0 // indirect
-	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/spf13/viper v1.7.1
-	github.com/ua-parser/uap-go v0.0.0-20200325213135-e1c09f13e2fe
-	golang.org/x/sys v0.0.0-20201015000850-e3ed0017c211 // indirect
-	gopkg.in/ini.v1 v1.62.0 // indirect
-	gopkg.in/yaml.v2 v2.3.0 // indirect
-	gorm.io/driver/postgres v1.0.2
-	gorm.io/gorm v1.20.2
+	github.com/jackc/pgx/v4 v4.13.0 // indirect
+	github.com/mattn/go-isatty v0.0.13 // indirect
+	github.com/spf13/cast v1.4.0 // indirect
+	github.com/spf13/viper v1.8.1
+	github.com/ua-parser/uap-go v0.0.0-20210121150957-347a3497cc39
+	google.golang.org/protobuf v1.27.1 // indirect
+	gorm.io/driver/postgres v1.1.0
+	gorm.io/gorm v1.21.12
 )
